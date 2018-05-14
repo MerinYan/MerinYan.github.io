@@ -1,5 +1,15 @@
-title: Dinky theme
-description: Dinky is a red hot theme for GitHub Pages.
-show_downloads: true
+title: My Notes
+description: 我的在线笔记
+show_downloads: false
 google_analytics:
+
+email: your-email@example.com
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "" # the base hostname & protocol for your site, e.g. http://example.com
+github_username:  MervinYan
+
+# Build settings
+markdown: kramdown
 theme: jekyll-theme-dinky
+#plugins:
+#  - jekyll-feed
