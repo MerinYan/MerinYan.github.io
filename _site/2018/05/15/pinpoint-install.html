@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>Pinpoint (APM)安装 | My Notes</title>
+<meta name="generator" content="Jekyll v3.8.1" />
+<meta property="og:title" content="Pinpoint (APM)安装" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Pinpoint 是一个Java开源的 APM 应用 GitHub： https://github.com/naver/pinpoint" />
+<meta property="og:description" content="Pinpoint 是一个Java开源的 APM 应用 GitHub： https://github.com/naver/pinpoint" />
+<link rel="canonical" href="http://localhost:4000/2018/05/15/pinpoint-install.html" />
+<meta property="og:url" content="http://localhost:4000/2018/05/15/pinpoint-install.html" />
+<meta property="og:site_name" content="My Notes" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-05-15T08:54:15+08:00" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2018/05/15/pinpoint-install.html"},"url":"http://localhost:4000/2018/05/15/pinpoint-install.html","description":"Pinpoint 是一个Java开源的 APM 应用 GitHub： https://github.com/naver/pinpoint","@type":"BlogPosting","headline":"Pinpoint (APM)安装","dateModified":"2018-05-15T08:54:15+08:00","datePublished":"2018-05-15T08:54:15+08:00","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <script src="/assets/js/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">My Notes</h1>
+        <p class="header">我的在线笔记</p>
+<ul>
+  
+    <li>
+      <a href="/2018/05/15/pinpoint-install.html">Pinpoint (APM)安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/14/bk-cmdb-install.html">腾讯蓝鲸CMDB安装</a>
+    </li>
+  
+</ul>
+        <ul>
+          
+          <li><a class="buttons github" href="">View On GitHub</a></li>
+        </ul>
+
+        
+
+        
+      </header>
+
+      <section>
+        <p>Pinpoint 是一个Java开源的 APM 应用<br />
+GitHub：	<a href="https://github.com/naver/pinpoint">https://github.com/naver/pinpoint</a></p>
+
+<p>应用主要分为4个部分：</p>
+<ol>
+  <li>Pinpoint Agent（从每个被监控组件采集数据）</li>
+  <li>Pinpoint Collector（收集每个Pinpoint Agent的数据并存入后台数据库）</li>
+  <li>HBASE Storage（性能数据存储）</li>
+  <li>Pinpoint Web UI（用户界面）</li>
+</ol>
+
+<p><img src="http://localhost:4000/assets/images/2018-05-15-pinpoint-construce.png" alt="Branching" /></p>
+
+<h3 id="组件下载具体版本需要参考官网的兼容列表">组件下载（具体版本需要参考官网的兼容列表）：</h3>
+<ol>
+  <li>hbase 1.2.6<br />
+ <a href="http://archive.apache.org/dist/hbase/1.2.6/hbase-1.2.6-bin.tar.gz">http://archive.apache.org/dist/hbase/1.2.6/hbase-1.2.6-bin.tar.gz</a></li>
+  <li>pinpoint-web 1.7.3<br />
+ <a href="https://github.com/naver/pinpoint/releases/download/1.7.3-RC1/pinpoint-web-1.7.3-RC1.war">https://github.com/naver/pinpoint/releases/download/1.7.3-RC1/pinpoint-web-1.7.3-RC1.war</a></li>
+  <li>pinpoint-collector 1.7.3<br />
+ <a href="https://github.com/naver/pinpoint/releases/download/1.7.3-RC1/pinpoint-collector-1.7.3-RC1.war">https://github.com/naver/pinpoint/releases/download/1.7.3-RC1/pinpoint-collector-1.7.3-RC1.war</a></li>
+  <li>tomcat 9.0.7<br />
+ <a href="http://mirrors.hust.edu.cn/apache/tomcat/tomcat-9/v9.0.7/bin/apache-tomcat-9.0.7.tar.gz">http://mirrors.hust.edu.cn/apache/tomcat/tomcat-9/v9.0.7/bin/apache-tomcat-9.0.7.tar.gz</a></li>
+</ol>
+
+<h3 id="hbase配置步骤">HBASE配置步骤：</h3>
+<ol>
+  <li>解压安装文件
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">tar </span>zxvf hbase-2.0.0-src.tar.gz
+<span class="nb">mv </span>hbase-2.0.0 /usr/local/
+<span class="c">#设置Java home</span>
+vi /usr/local/hbase-1.2.6/conf/hbase-env.sh 
+<span class="nb">export </span><span class="nv">JAVA_HOME</span><span class="o">=</span>/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.161-0.b14.el7_4.x86_64/
+</code></pre></div>    </div>
+  </li>
+  <li>设置HBASE文件存储位置
+    <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vi /usr/local/hbase-1.2.6/conf/hbase-site.xml  
+ <span class="nt">&lt;configuration&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>hbase.rootdir<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>file:///data/hbase<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;/property&gt;</span>
+ <span class="nt">&lt;/configuration&gt;</span>
+</code></pre></div>    </div>
+  </li>
+  <li>启动HBASE
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/usr/local/hbase-1.2.6/bin/start-hbase.sh
+</code></pre></div>    </div>
+  </li>
+  <li>验证服务
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8-m medias]# jps 
+29943 HMaster
+6775 Jps
+</code></pre></div>    </div>
+  </li>
+  <li>初始化pinpoint数据表
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/usr/local/hbase-1.2.6/bin/hbase shell https://raw.githubusercontent.com/naver/pinpoint/master/hbase/scripts/hbase-create.hbase
+</code></pre></div>    </div>
+  </li>
+  <li>查看hbase表内容，看到如下内容表明初始化成功
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@k8-m medias]# /usr/local/hbase-1.2.6/bin/hbase shell
+2018-05-02 17:06:31,018 WARN  <span class="o">[</span>main] util.NativeCodeLoader: Unable to load native-hadoop library <span class="k">for </span>your platform... using builtin-java classes where applicable
+HBase Shell<span class="p">;</span> enter <span class="s1">'help&lt;RETURN&gt;'</span> <span class="k">for </span>list of supported commands.
+Type <span class="s2">"exit&lt;RETURN&gt;"</span> to leave the HBase Shell
+Version 1.2.6, rUnknown, Mon May 29 02:25:32 CDT 2017
+hbase<span class="o">(</span>main<span class="o">)</span>:001:0&gt;  status <span class="s1">'detailed'</span>
+version 1.2.6
+0 regionsInTransition
+active master:  k8-m:34918 1525233998100
+0 backup masters
+master coprocessors: <span class="o">[]</span>
+1 live servers
+ k8-m:34887 1525234008805
+     <span class="nv">requestsPerSecond</span><span class="o">=</span>0.0, <span class="nv">numberOfOnlineRegions</span><span class="o">=</span>482, <span class="nv">usedHeapMB</span><span class="o">=</span>229, <span class="nv">maxHeapMB</span><span class="o">=</span>3978, <span class="nv">numberOfStores</span><span class="o">=</span>482, <span class="nv">numberOfStorefiles</span><span class="o">=</span>52, <span class="nv">storefileUncompressedSizeMB</span><span class="o">=</span>0, <span class="nv">storefileSizeMB</span><span class="o">=</span>0, <span class="nv">memstoreSizeMB</span><span class="o">=</span>0, <span class="nv">storefileIndexSizeMB</span><span class="o">=</span>0, <span class="nv">readRequestsCount</span><span class="o">=</span>33238, <span class="nv">writeRequestsCount</span><span class="o">=</span>2478, <span class="nv">rootIndexSizeKB</span><span class="o">=</span>11, <span class="nv">totalStaticIndexSizeKB</span><span class="o">=</span>8, <span class="nv">totalStaticBloomSizeKB</span><span class="o">=</span>0, <span class="nv">totalCompactingKVs</span><span class="o">=</span>4329, <span class="nv">currentCompactedKVs</span><span class="o">=</span>4329, <span class="nv">compactionProgressPct</span><span class="o">=</span>1.0, <span class="nv">coprocessors</span><span class="o">=[</span>MultiRowMutationEndpoint]
+     <span class="s2">"AgentEvent,,1525228077865.0eeae43306d9ddf59d1cd72a9a27cdc3."</span>
+         <span class="nv">numberOfStores</span><span class="o">=</span>1, <span class="nv">numberOfStorefiles</span><span class="o">=</span>1, <span class="nv">storefileUncompressedSizeMB</span><span class="o">=</span>0, <span class="nv">lastMajorCompactionTimestamp</span><span class="o">=</span>0, <span class="nv">storefileSizeMB</span><span class="o">=</span>0, <span class="nv">memstoreSizeMB</span><span class="o">=</span>0, <span class="nv">storefileIndexSizeMB</span><span class="o">=</span>0, <span class="nv">readRequestsCount</span><span class="o">=</span>13, <span class="nv">writeRequestsCount</span><span class="o">=</span>24, <span class="nv">rootIndexSizeKB</span><span class="o">=</span>0, <span class="nv">totalStaticIndexSizeKB</span><span class="o">=</span>0, <span class="nv">totalStaticBloomSizeKB</span><span class="o">=</span>0, <span class="nv">totalCompactingKVs</span><span class="o">=</span>0, <span class="nv">currentCompactedKVs</span><span class="o">=</span>0, <span class="nv">compactionProgressPct</span><span class="o">=</span>NaN, <span class="nv">completeSequenceId</span><span class="o">=</span>16, <span class="nv">dataLocality</span><span class="o">=</span>0.0
+     <span class="s2">"AgentInfo,,1525228062698.efab5c5fae67d0e2c5a686bff73e5298."</span>
+</code></pre></div>    </div>
+  </li>
+  <li>查看HBASE web
+ 浏览器打开： http://hbase-ip:16010/master-status</li>
+</ol>
+
+<h3 id="pinpoint-collector">pinpoint collector</h3>
+<ol>
+  <li>解压tomcat
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">tar </span>zxvf apache-tomcat-9.0.7.tar.gz 
+<span class="nb">mv </span>apache-tomcat-9.0.7 /opt/pp-col
+</code></pre></div>    </div>
+  </li>
+  <li>修改tomcat端口（如果没有端口冲突可以不用修改）
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vi conf/server.xml
+</code></pre></div>    </div>
+  </li>
+  <li>启动tomcat
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/opt/pp-col/bin/startup.sh
+</code></pre></div>    </div>
+  </li>
+  <li>解压war包
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">rm</span> <span class="nt">-rf</span> /opt/pp-col/webapps/ROOT/<span class="k">*</span>
+unzip /opt/medias/pinpoint-collector-1.7.3-RC1.war <span class="nt">-d</span> /opt/pp-col/webapps/ROOT/
+</code></pre></div>    </div>
+  </li>
+  <li>修改配置文件（默认无需修改）
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>webapps/ROOT/WEB-INF/classes下面的pinpoint-collector.properties, hbase.properties
+• pinpoint-collector.properties - contains configurations for the collector. Check the following values with the agent’s configuration options :
+     ○ collector.tcpListenPort (agent’s profiler.collector.tcp.port - default: 9994)
+     ○ collector.udpStatListenPort (agent’s profiler.collector.stat.port - default: 9995)
+     ○ collector.udpSpanListenPort (agent’s profiler.collector.span.port - default: 9996)
+• hbase.properties - contains configurations to connect to HBase.
+     ○ hbase.client.host (default: localhost)
+     ○ hbase.client.port (default: 2181)
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="pinpoint-web">pinpoint web</h3>
+<ol>
+  <li>启动tomcat(略)</li>
+  <li>解压war包
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>unzip /opt/medias/pinpoint-web-1.7.3-RC1.war <span class="nt">-d</span> webapps/ROOT/
+</code></pre></div>    </div>
+  </li>
+  <li>修改配置文件（默认无需修改）
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>webapps/ROOT/WEB-INF/classes/下面的pinpoint-web.properties, hbase.properties
+hbase.properties - contains configurations to connect to HBase.
+     • hbase.client.host (default: localhost)
+     • hbase.client.port (default: 2181)
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="pinpoint-agent">pinpoint agent</h3>
+<p><img src="http://localhost:4000/assets/images/2018-05-15-Pinpoint-agent-download.png" alt="Branching" /></p>
+
+<ol>
+  <li>
+    <p>Agent 下载：
+打开http://hbase-ip:16010/master-status 页面，在右上角打开设置页面 –&gt; 打开installation页签，填写应用名称和应用ID，点击下载链接即可</p>
+  </li>
+  <li>下载以后解压，然后修改 pinpoint.config
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>profiler.collector.ip=192.168.1.51
+</code></pre></div>    </div>
+  </li>
+  <li>配置中间件<br />
+tomcat
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#修改bin/catalina.sh，在文件开头加入：
+CATALINA_OPTS="$CATALINA_OPTS -javaagent:/Users/mervin/eclipse/pinpoint-agent-1.7.2/pinpoint-bootstrap-1.7.2.jar"
+CATALINA_OPTS="$CATALINA_OPTS -Dpinpoint.applicationName=web2"
+CATALINA_OPTS="$CATALINA_OPTS -Dpinpoint.agentId=web120180502-1"
+</code></pre></div>    </div>
+    <p>jetty</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 修改start.ini
+# Module: jvm
+--module=jvm
+--exec
+-javaagent:/Users/mervin/eclipse/pinpoint-agent-1.7.2/pinpoint-bootstrap-1.7.2.jar
+-Dpinpoint.applicationName=web4
+-Dpinpoint.agentId=web120180502-3
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+      </section>
+
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
