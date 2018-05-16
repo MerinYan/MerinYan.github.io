@@ -35,7 +35,15 @@
 <ul>
   
     <li>
+      <a href="/2018/05/15/Ansible-Tower-%E5%AE%89%E8%A3%85.html">Ansible Tower安装</a>
+    </li>
+  
+    <li>
       <a href="/2018/05/15/pinpoint-install.html">Pinpoint (APM)安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/14/SQL-%E6%97%B6%E9%97%B4%E8%BD%AC%E6%8D%A2.html">SQL 时间转换</a>
     </li>
   
     <li>
@@ -75,6 +83,9 @@ GitHub：	<a href="https://github.com/Tencent/bk-cmdb">https://github.com/Tencen
 <span class="o">[</span>root@bkcmdb medias]# <span class="nb">cd </span>redis-3.2.11 
 <span class="o">[</span>root@bkcmdb redis]# make <span class="nv">MALLOC</span><span class="o">=</span>libc
 <span class="o">[</span>root@bkcmdb redis]# make <span class="nb">install</span>
+<span class="o">[</span>root@bkcmdb redis]# <span class="nb">mkdir</span> <span class="nt">-p</span> /usr/local/redis/etc
+<span class="o">[</span>root@bkcmdb redis]# <span class="nb">mkdir</span> <span class="nt">-p</span> /usr/local/redis/bin
+<span class="o">[</span>root@bkcmdb redis]# <span class="nb">cp </span>redis.conf /usr/local/redis/etc/redis.conf
 <span class="o">[</span>root@bkcmdb redis]# <span class="nb">cd </span>src
 <span class="o">[</span>root@bkcmdb src]# <span class="nb">mv </span>mkreleasehdr.sh redis-benchmark redis-check-aof redis-check-rdb redis-cli redis-sentinel redis-server redis-trib.rb /usr/local/redis/bin
 <span class="o">[</span>root@bkcmdb redis]# vi /usr/local/redis/etc/redis.conf  <span class="c">#将daemonize 改为 yes ，后台启动redis</span>

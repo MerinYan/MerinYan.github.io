@@ -26,6 +26,9 @@ GitHub：	[https://github.com/Tencent/bk-cmdb](https://github.com/Tencent/bk-cmd
 [root@bkcmdb medias]# cd redis-3.2.11 
 [root@bkcmdb redis]# make MALLOC=libc
 [root@bkcmdb redis]# make install
+[root@bkcmdb redis]# mkdir -p /usr/local/redis/etc
+[root@bkcmdb redis]# mkdir -p /usr/local/redis/bin
+[root@bkcmdb redis]# cp redis.conf /usr/local/redis/etc/redis.conf
 [root@bkcmdb redis]# cd src
 [root@bkcmdb src]# mv mkreleasehdr.sh redis-benchmark redis-check-aof redis-check-rdb redis-cli redis-sentinel redis-server redis-trib.rb /usr/local/redis/bin
 [root@bkcmdb redis]# vi /usr/local/redis/etc/redis.conf  #将daemonize 改为 yes ，后台启动redis

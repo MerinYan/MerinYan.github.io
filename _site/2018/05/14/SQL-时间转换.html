@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>SQL 时间转换 | My Notes</title>
+<meta name="generator" content="Jekyll v3.8.1" />
+<meta property="og:title" content="SQL 时间转换" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="SQL 时间转换" />
+<meta property="og:description" content="SQL 时间转换" />
+<link rel="canonical" href="http://localhost:4000/2018/05/14/SQL-%E6%97%B6%E9%97%B4%E8%BD%AC%E6%8D%A2.html" />
+<meta property="og:url" content="http://localhost:4000/2018/05/14/SQL-%E6%97%B6%E9%97%B4%E8%BD%AC%E6%8D%A2.html" />
+<meta property="og:site_name" content="My Notes" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-05-14T16:34:57+08:00" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2018/05/14/SQL-%E6%97%B6%E9%97%B4%E8%BD%AC%E6%8D%A2.html"},"url":"http://localhost:4000/2018/05/14/SQL-%E6%97%B6%E9%97%B4%E8%BD%AC%E6%8D%A2.html","description":"SQL 时间转换","headline":"SQL 时间转换","dateModified":"2018-05-14T16:34:57+08:00","datePublished":"2018-05-14T16:34:57+08:00","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <script src="/assets/js/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">My Notes</h1>
+        <p class="header">我的在线笔记</p>
+<ul>
+  
+    <li>
+      <a href="/2018/05/15/Ansible-Tower-%E5%AE%89%E8%A3%85.html">Ansible Tower安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/15/pinpoint-install.html">Pinpoint (APM)安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/14/SQL-%E6%97%B6%E9%97%B4%E8%BD%AC%E6%8D%A2.html">SQL 时间转换</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/14/bk-cmdb-install.html">腾讯蓝鲸CMDB安装</a>
+    </li>
+  
+</ul>
+        <ul>
+          
+          <!-- <li><a class="buttons github" href="">View On GitHub</a></li> -->
+        </ul>
+
+        
+
+        
+      </header>
+
+      <section>
+        <p>SQL 时间转换</p>
+
+<p>Hive SQL:</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="n">from_unixtime</span><span class="p">(</span><span class="mi">1506312316</span><span class="p">,</span><span class="s1">'yyyy-MM-ddTHH:mm:ss.SSSZ'</span><span class="p">)</span>
+<span class="c1">-- 得到：2017-09-25T04:05:16.000Z</span>
+</code></pre></div></div>
+<p>SQLServer</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="n">DATEDIFF</span><span class="p">(</span><span class="n">S</span><span class="p">,</span><span class="s1">'1970-01-01 00:00:00'</span><span class="p">,</span><span class="n">getdate</span><span class="p">())</span><span class="o">-</span> <span class="mi">8</span><span class="o">*</span><span class="mi">3600</span>
+<span class="c1">-- 得到：1514120824</span>
+</code></pre></div></div>
+
+      </section>
+
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
