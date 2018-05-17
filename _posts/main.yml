@@ -1,0 +1,35 @@
+- name: copy nginx package to remote host  
+  copy: src=nginx-1.14.0.tar.gz  dest=/tmp/nginx-1.14.0.tar.gz
+  tags: cppkg
+- name: tarnginx
+  shell: cd /tmp;tar -zxvf nginx-1.14.0.tar.gz
+- name: installpakger
+  yum: name={{ item }} state=latest
+  with_items:
+    - openssl-devel
+    - pcre-devel
+    - gcc
+- name: installnginx
+  shell: cd /tmp/nginx-1.14.0;./configure --user=nginx --group=nginx --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-pcre; make&& make install
+- name: copy conf file nginx.conf          
+  copy: src=nginx.conf dest=/usr/local/nginx/conf/nginx.conf
+  tags: ngxconf
+- name: copy nginx service file
+  copy: src=nginx dest=/etc/init.d/nginx
+- name: create user
+  user: name="nginx"
+- name: start nginx service
+  shell: service nginx start
+
+- hosts: hadoop
+  remote_user: root
+  roles:
+    - nginx
+
+
+- name: copy nginx_tar_gz to client
+  copy: src=nginx-1.14.0.tar.gz dest=/tmp/nginx-1.14.0.tar.gz
+- name: copy install_shell to client
+  copy: src=install_nginx.sh dest=/tmp/install_nginx.sh
+- name: install nginx
+  shell: /bin/bash /tmp/install_nginx.sh
