@@ -346,7 +346,8 @@ p img, .emoji {
 code, pre {
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
   color: #000;
-  font-size: 14px; }
+  line-height: 1.8em;
+  font-size: 9px; }
 
 pre {
   padding: 4px 12px;
@@ -362,7 +363,7 @@ table {
   width: 100%; }
 
 table {
-  border: 1px solid #ccc;
+  /*border: 1px solid #ccc; */
   margin-bottom: 32px;
   text-align: left; }
 
@@ -370,12 +371,12 @@ th {
   font-family: 'Arvo', Helvetica, Arial, sans-serif;
   font-size: 18px;
   font-weight: normal;
-  padding: 10px;
+  padding: 6px;
   background: #232323;
   color: #FDFEFB; }
 
 td {
-  padding: 10px;
+  padding: 6px;
   background: #ccc; }
 
 /* Wrapper */

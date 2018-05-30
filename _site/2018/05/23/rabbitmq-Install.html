@@ -35,6 +35,10 @@
 <ul>
   
     <li>
+      <a href="/2018/05/25/Redhat-Openshift-3.7-install.html">Redhat Openshift 3.7 安装</a>
+    </li>
+  
+    <li>
       <a href="/2018/05/23/rabbitmq-Install.html">RabbitMQ安装</a>
     </li>
   
@@ -80,7 +84,7 @@
       <section>
         <p>官网: <a href="http://www.rabbitmq.com/install-rpm.html">http://www.rabbitmq.com/install-rpm.html</a></p>
 
-<h2 id="erlang-安装">erlang 安装:</h2>
+<h3 id="erlang-安装">erlang 安装:</h3>
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@rbtnode1 ~]# vi /etc/yum.repos.d/rabbitmq-erlang.repo
 <span class="o">[</span>rabbitmq-erlang]
 <span class="nv">name</span><span class="o">=</span>rabbitmq-erlang
@@ -92,15 +96,15 @@
 <span class="o">[</span>root@rbtnode1 ~]# yum <span class="nt">-y</span> <span class="nb">install </span>erlang
 </code></pre></div></div>
 
-<h2 id="rabbitmq-安装配置">Rabbitmq 安装配置</h2>
+<h3 id="rabbitmq-安装配置">Rabbitmq 安装配置</h3>
 
-<ol>
-  <li>Rabbitmq 安装:
-    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@rbtnode1 ~]# rpm <span class="nt">--import</span> https://dl.bintray.com/rabbitmq/Keys/rabbitmq-release-signing-key.asc
+<h4 id="1-rabbitmq-安装">1. Rabbitmq 安装:</h4>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@rbtnode1 ~]# rpm <span class="nt">--import</span> https://dl.bintray.com/rabbitmq/Keys/rabbitmq-release-signing-key.asc
 <span class="o">[</span>root@rbtnode1 ~]# wget https://dl.bintray.com/rabbitmq/all/rabbitmq-server/3.7.5/rabbitmq-server-3.7.5-1.el7.noarch.rpm
 <span class="o">[</span>root@rbtnode1 ~]# yum <span class="nt">-y</span> <span class="nb">install </span>rabbitmq-server-3.7.5-1.el7.noarch.rpm
-</code></pre></div>    </div>
-  </li>
+</code></pre></div></div>
+
+<ol>
   <li>服务启停：
     <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@rbtnode1 ~]# /sbin/service rabbitmq-server start
 <span class="o">[</span>root@rbtnode1 ~]# /sbin/service rabbitmq-server stop
@@ -176,13 +180,200 @@ started 3 plugins.
 <span class="n">channel</span><span class="o">.</span><span class="n">start_consuming</span><span class="p">()</span>
 </code></pre></div>    </div>
   </li>
-  <li>最终测试
+  <li>发送接收测试
     <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">(</span>venv<span class="o">)</span> <span class="o">[</span>root@rbtnode1 ~]# python send.py    <span class="c">#启动发送程序，发送一条消息</span>
  <span class="o">[</span>x] Sent <span class="s1">'Hello World!'</span>
 <span class="o">(</span>venv<span class="o">)</span> <span class="o">[</span>root@rbtnode1 ~]# python receive.py     <span class="c">#启动接收程序，将受到这条消息</span>
  <span class="o">[</span><span class="k">*</span><span class="o">]</span> Waiting <span class="k">for </span>messages. To <span class="nb">exit </span>press CTRL+C
  <span class="o">[</span>x] Received <span class="s1">'Hello World!'</span>
 </code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="集群配置">集群配置</h2>
+
+<p>本测试集群一共3台机器，通过hosts文件解析每台机器</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@rabbit1 ~]# more /etc/hosts
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+192.168.1.41 rabbit1
+192.168.1.42 rabbit2
+192.168.1.43 rabbit3
+</code></pre></div></div>
+
+<ol>
+  <li>在每台服务器上安装Rabbitmq，启动服务，查看服务运行状态
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@rabbit1 ~]# systemctl start rabbitmq-server.service
+[root@rabbit1 ~]# rabbitmqctl cluster_status 
+</code></pre></div>    </div>
+  </li>
+  <li>设置不同节点间同一认证的Erlang Cookie
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@rabbit1 ~]# more  /var/lib/rabbitmq/.erlang.cookie 
+ILGLLRDTETMESQPRNXBD
+...
+[root@rabbit2 ~]# rabbitmqctl stop
+[root@rabbit2 ~]# echo 'ILGLLRDTETMESQPRNXBD' &gt;  /var/lib/rabbitmq/.erlang.cookie
+[root@rabbit2 ~]# systemctl start rabbitmq-server.service
+...
+[root@rabbit3 ~]# rabbitmqctl stop
+[root@rabbit3 ~]# echo 'ILGLLRDTETMESQPRNXBD' &gt;  /var/lib/rabbitmq/.erlang.cookie
+[root@rabbit3 ~]# systemctl start rabbitmq-server.service
+</code></pre></div>    </div>
+  </li>
+  <li>将rabbit2、rabbit3加入到集群中
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@rabbit2 ~]# rabbitmqctl stop
+[root@rabbit2 ~]# rabbitmqctl join_cluster rabbit@rabbit1
+[root@rabbit2 ~]# rabbitmqctl start_app
+...
+[root@rabbit3 ~]# rabbitmqctl stop
+[root@rabbit3 ~]# rabbitmqctl join_cluster rabbit@rabbit1
+[root@rabbit3 ~]# rabbitmqctl start_app
+</code></pre></div>    </div>
+  </li>
+  <li>设置集群的模式为HA
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@rabbit3 ~]# rabbitmqctl set_policy ha-all '^' '{"ha-mode": "all"}'  #在任意一台服务器执行
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="haproxy-配置">HAProxy 配置</h2>
+<h4 id="1-安装haproxy">1. 安装haproxy</h4>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@localhost ~]# yum install haproxy
+[root@localhost ~]# more /etc/haproxy/haproxy.cfg
+#---------------------------------------------------------------------
+# Global settings [默认内容]
+#---------------------------------------------------------------------
+global
+    log         127.0.0.1 local2
+    chroot      /var/lib/haproxy
+    pidfile     /var/run/haproxy.pid
+    maxconn     4000
+    user        haproxy
+    group       haproxy
+    daemon
+    stats socket /var/lib/haproxy/stats
+#---------------------------------------------------------------------
+# common defaults that all the 'listen' and 'backend' sections will
+# use if not designated in their block [默认内容]
+#---------------------------------------------------------------------
+defaults
+    mode                    http
+    log                     global
+    option                  httplog
+    option                  dontlognull
+    option http-server-close
+    option                  redispatch
+    retries                 3
+    timeout http-request    10s
+    timeout queue           1m
+    timeout connect         10s
+    timeout client          1m
+    timeout server          1m
+    timeout http-keep-alive 10s
+    timeout check           10s
+    maxconn                 3000
+#---------------------------------------------------------------------
+# Haproxy 统计页面 [新增加的内容]
+#---------------------------------------------------------------------
+listen http_front
+        bind 0.0.0.0:1080           #监听端口  
+        mode http
+        stats refresh 30s           #统计页面自动刷新时间  
+        stats uri /haproxy?stats    #统计页面url  
+        stats realm Haproxy Manager #统计页面密码框上提示文本  
+        stats auth admin:admin      #统计页面用户名和密码设置  
+        stats hide-version          #隐藏统计页面上HAProxy的版本信息
+#---------------------------------------------------------------------
+# RabbitMQ 管理界面 [新增加的内容]
+#---------------------------------------------------------------------
+listen rabbitmq_admin
+    bind 0.0.0.0:8004
+    server node1 192.168.1.41:15672
+    server node2 192.168.1.42:15672
+    server node3 192.168.1.43:15672
+#---------------------------------------------------------------------
+# RabbitMQ 集群 [新增加的内容]
+#---------------------------------------------------------------------
+listen rabbitmq_cluster
+    bind 0.0.0.0:5672
+    option tcplog
+    mode tcp
+    timeout client  3h
+    timeout server  3h
+    option          clitcpka
+    balance roundrobin      #负载均衡算法（roundrobin 轮询 source 保存session值）
+    server   node1 192.168.1.41:5672 check inter 5s rise 2 fall 3   
+    server   node2 192.168.1.42:5672 check inter 5s rise 2 fall 3
+    server   node3 192.168.1.43:5672 check inter 5s rise 2 fall 3
+    #check inter 2000 是检测心跳频率，rise 2是2次正确认为服务器可用，fall 3是3次失败认为服务器不可用
+[root@localhost ~]# service haproxy restart     
+Stopping haproxy:                                          [  OK  ]
+Starting haproxy:                                          [  OK  ]
+</code></pre></div></div>
+
+<h4 id="2-访问测试">2. 访问测试</h4>
+
+<h5 id="21-浏览器访问haproxy-统计页面">2.1. 浏览器访问HAProxy 统计页面：</h5>
+<p><a href="http://192.168.1.47:1080/haproxy?stats">http://192.168.1.47:1080/haproxy?stats</a></p>
+
+<p><img src="http://localhost:4000/assets/images/2018-05-23-rabbitmq-ha-status.png" alt="rabbitmq" /></p>
+
+<h5 id="22-浏览器访问rabbitmq-web管理界面">2.2. 浏览器访问Rabbitmq WEB管理界面：</h5>
+<p><a href="http://192.168.1.47:8004/">http://192.168.1.47:8004</a>
+<img src="http://localhost:4000/assets/images/2018-05-23-rabbitmq-status.png" alt="rabbitmq" /></p>
+
+<h5 id="23-python-发送接收消息测试">2.3. Python 发送接收消息测试：</h5>
+<p>将脚本send.py 和 receive.py中的localhost更换成HAProxy的IP</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(venv) [root@rabbit1 ~]# python send.py 
+ [x] Sent 'Hello World!'
+(venv) [root@rabbit2 ~]# python receive.py 
+ [*] Waiting for messages. To exit press CTRL+C
+ [x] Received 'Hello World!'
+</code></pre></div></div>
+
+<h2 id="常见故障">常见故障</h2>
+
+<ol>
+  <li>加入集群失败，报错如下：
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@rbtnode2 ~]# rabbitmqctl join_cluster rabbit@rbtnode1
+Clustering node rabbit@rbtnode2 with rabbit@rbtnode1
+Error: unable to perform an operation on node 'rabbit@rbtnode1'. Please see diagnostics information and suggestions below.
+...
+Most common reasons for this are:
+...
+ * Target node is unreachable (e.g. due to hostname resolution, TCP connection or firewall issues)
+ * CLI tool fails to authenticate with the server (e.g. due to CLI tool's Erlang cookie not matching that of the server)
+ * Target node is not running
+...
+In addition to the diagnostics info below:
+...
+ * See the CLI, clustering and networking guides on http://rabbitmq.com/documentation.html to learn more
+ * Consult server logs on node rabbit@rbtnode1
+...
+DIAGNOSTICS
+===========
+...
+attempted to contact: [rabbit@rbtnode1]
+...
+rabbit@rbtnode1:
+  * connected to epmd (port 4369) on rbtnode1
+  * epmd reports node 'rabbit' uses port 25672 for inter-node and CLI tool traffic 
+  * TCP connection succeeded but Erlang distribution failed 
+...
+  * Authentication failed (rejected by the remote node), please check the Erlang cookie
+...
+...
+Current node details:
+ * node name: rabbitmqcli92@rbtnode2
+ * effective user's home directory: /var/lib/rabbitmq
+ * Erlang cookie hash: C+sb0Iaw+WgDlc6z98NMQQ==
+</code></pre></div>    </div>
+    <p>可能的原因:</p>
+    <ul>
+      <li>防火墙问题（此节点连接不上其他节点）</li>
+      <li>Rabbitmq服务异常（其他节点Rabbitmq服务没有正常启动）</li>
+      <li>erlang cookie文件内容不一致（所有节点的/var/lib/rabbitmq/.erlang.cookie文件内容必须相同）</li>
+    </ul>
   </li>
 </ol>
 
