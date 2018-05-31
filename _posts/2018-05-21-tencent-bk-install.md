@@ -115,3 +115,22 @@ drwxrwxr-x 16 root root        255 Apr 11 22:32 src
 
 ```
 
+### 常见问题
+- 安装PaaS应用（故障自愈FTA）失败
+```
+需要先安装fta支持，然后初始化数据库
+[root@rbtnode1 install]# ./bkeec install fta
+[root@rbtnode1 install]# ./bkeec initdata fta
+最后安装SaaS FTA应用
+```
+
+- 监控数据无法上报
+```
+服务端也需要安装agent
+./bkeec install gse_agent
+需要安装cron组件才可以收数据
+./bkeec install cron
+```
+
+
+

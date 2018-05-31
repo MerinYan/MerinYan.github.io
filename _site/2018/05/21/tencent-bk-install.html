@@ -35,6 +35,10 @@
 <ul>
   
     <li>
+      <a href="/2018/05/25/Redhat-add-disk-to-lvm.html">Redhat 添加新硬盘到LVM</a>
+    </li>
+  
+    <li>
       <a href="/2018/05/25/Redhat-Openshift-3.7-install.html">Redhat Openshift 3.7 安装</a>
     </li>
   
@@ -221,6 +225,24 @@ drwxrwxr-x 16 root root        255 Apr 11 22:32 src
 [root@rbtnode1 install]# ./bkeec clean all  #卸载所有服务
 
 </code></pre></div></div>
+
+<h3 id="常见问题">常见问题</h3>
+<ul>
+  <li>安装PaaS应用（故障自愈FTA）失败
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>需要先安装fta支持，然后初始化数据库
+[root@rbtnode1 install]# ./bkeec install fta
+[root@rbtnode1 install]# ./bkeec initdata fta
+最后安装SaaS FTA应用
+</code></pre></div>    </div>
+  </li>
+  <li>监控数据无法上报
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>服务端也需要安装agent
+./bkeec install gse_agent
+需要安装cron组件才可以收数据
+./bkeec install cron
+</code></pre></div>    </div>
+  </li>
+</ul>
 
 
       </section>

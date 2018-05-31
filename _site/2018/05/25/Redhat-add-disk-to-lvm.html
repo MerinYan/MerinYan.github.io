@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>Redhat 添加新硬盘到LVM | My Notes</title>
+<meta name="generator" content="Jekyll v3.8.1" />
+<meta property="og:title" content="Redhat 添加新硬盘到LVM" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Redhat添加新的硬盘到卷组中" />
+<meta property="og:description" content="Redhat添加新的硬盘到卷组中" />
+<link rel="canonical" href="http://localhost:4000/2018/05/25/Redhat-add-disk-to-lvm.html" />
+<meta property="og:url" content="http://localhost:4000/2018/05/25/Redhat-add-disk-to-lvm.html" />
+<meta property="og:site_name" content="My Notes" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-05-25T22:06:35+08:00" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2018/05/25/Redhat-add-disk-to-lvm.html"},"url":"http://localhost:4000/2018/05/25/Redhat-add-disk-to-lvm.html","description":"Redhat添加新的硬盘到卷组中","headline":"Redhat 添加新硬盘到LVM","dateModified":"2018-05-25T22:06:35+08:00","datePublished":"2018-05-25T22:06:35+08:00","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <script src="/assets/js/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">My Notes</h1>
+        <p class="header">我的在线笔记</p>
+<ul>
+  
+    <li>
+      <a href="/2018/05/25/Redhat-add-disk-to-lvm.html">Redhat 添加新硬盘到LVM</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/25/Redhat-Openshift-3.7-install.html">Redhat Openshift 3.7 安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/23/rabbitmq-Install.html">RabbitMQ安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/21/tencent-bk-install.html">腾讯蓝鲸安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/17/Ansible-Playbook-Install-Nginx.html">Ansible Playbook编译安装Nginx</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/16/Ansible-Tower-%E5%AE%89%E8%A3%85.html">Ansible Tower安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/16/Nginx-Make-Install.html">Nginx编译安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/15/pinpoint-install.html">Pinpoint (APM)安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/14/SQL-%E6%97%B6%E9%97%B4%E8%BD%AC%E6%8D%A2.html">SQL 时间转换</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/14/bk-cmdb-install.html">腾讯蓝鲸CMDB安装</a>
+    </li>
+  
+</ul>
+        <ul>
+          
+          <!-- <li><a class="buttons github" href="">View On GitHub</a></li> -->
+        </ul>
+
+        
+
+        
+      </header>
+
+      <section>
+        <p>Redhat添加新的硬盘到卷组中</p>
+
+<ol>
+  <li>创建物理卷
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@master ~]# pvcreate /dev/sda  #将整个磁盘创建为物理卷的命令
+Physical volume "/dev/sda" successfully created.
+[root@master ~]# pvcreate /dev/sdc1  #将单个分区创建为物理卷的命令为：
+Physical volume "/dev/sdc1" successfully created
+</code></pre></div>    </div>
+  </li>
+  <li>添加新的物理卷到卷组中
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@master ~]# vgdisplay  #查看现有的卷组
+  --- Volume group ---
+  VG Name               rhel
+  System ID             
+  Format                lvm2
+  Metadata Areas        1
+  Metadata Sequence No  3
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                2
+  Open LV               2
+  Max PV                0
+  Cur PV                1
+  Act PV                1
+  VG Size               &lt;29.00 GiB
+  PE Size               4.00 MiB
+  Total PE              7423
+  Alloc PE / Size       7423 / &lt;29.00 GiB
+  Free  PE / Size       0 / 0   
+  VG UUID               zp9oyN-VFhi-Elkj-e7Q5-P6Qd-Udc6-zRO4YA
+[root@master ~]# vgextend rhel /dev/sda  #将物理卷添加到卷组中
+  Volume group "rhel" successfully extended
+[root@master ~]# vgs   #显示卷组空间
+  VG   #PV #LV #SN Attr   VSize  VFree  
+  rhel   2   2   0 wz--n- 58.99g &lt;30.00g
+</code></pre></div>    </div>
+  </li>
+  <li>扩展现有的逻辑卷
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@master ~]# lvextend /dev/rhel/root -L +26G    #空间增加26GB
+  Rounding size to boundary between physical extents: 26.00 GiB.
+  Size of logical volume rhel/root changed from &lt;52.00 GiB (13311 extents) to &lt;53.00 GiB (13567 extents).
+  Logical volume rhel/root successfully resized.
+[root@master ~]# xfs_growfs /dev/rhel/root    #使得空间生效
+meta-data=/dev/mapper/rhel-root  isize=512    agcount=4, agsize=1703680 blks
+      =                       sectsz=512   attr=2, projid32bit=1
+      =                       crc=1        finobt=0 spinodes=0
+data     =                       bsize=4096   blocks=6814720, imaxpct=25
+      =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal               bsize=4096   blocks=3327, version=2
+      =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+data blocks changed from 6814720 to 13630464
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+      </section>
+
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
