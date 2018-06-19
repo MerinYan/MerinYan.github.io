@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>Ansible笔记 | My Notes</title>
+<meta name="generator" content="Jekyll v3.8.1" />
+<meta property="og:title" content="Ansible笔记" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="被管机要求 Python 版本 2.4 或以上.如果版本低于 Python 2.5 ,还需要额外安装一个模块:python-simplejson 不支持Python3，可以通过命令安装Python2 ansible myhost –sudo -m raw -a “yum install -y python2 python-simplejson” 如果被管节点上开启了SElinux,你需要安装libselinux-python" />
+<meta property="og:description" content="被管机要求 Python 版本 2.4 或以上.如果版本低于 Python 2.5 ,还需要额外安装一个模块:python-simplejson 不支持Python3，可以通过命令安装Python2 ansible myhost –sudo -m raw -a “yum install -y python2 python-simplejson” 如果被管节点上开启了SElinux,你需要安装libselinux-python" />
+<link rel="canonical" href="http://localhost:4000/2018/06/01/ansible-comment.html" />
+<meta property="og:url" content="http://localhost:4000/2018/06/01/ansible-comment.html" />
+<meta property="og:site_name" content="My Notes" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-06-01T22:47:22+08:00" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2018/06/01/ansible-comment.html"},"url":"http://localhost:4000/2018/06/01/ansible-comment.html","description":"被管机要求 Python 版本 2.4 或以上.如果版本低于 Python 2.5 ,还需要额外安装一个模块:python-simplejson 不支持Python3，可以通过命令安装Python2 ansible myhost –sudo -m raw -a “yum install -y python2 python-simplejson” 如果被管节点上开启了SElinux,你需要安装libselinux-python","headline":"Ansible笔记","dateModified":"2018-06-01T22:47:22+08:00","datePublished":"2018-06-01T22:47:22+08:00","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <script src="/assets/js/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">My Notes</h1>
+        <p class="header">我的在线笔记</p>
+<ul>
+  
+    <li>
+      <a href="/2018/06/19/Django_Echarts.html">Django Echarts</a>
+    </li>
+  
+    <li>
+      <a href="/2018/06/01/ansible-comment.html">Ansible笔记</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/31/Mac-MySQL-Install.html">Mac Mysql 安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/25/Redhat-add-disk-to-lvm.html">Redhat 添加新硬盘到LVM</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/25/Redhat-Openshift-3.7-install.html">Redhat Openshift 3.7 安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/23/rabbitmq-Install.html">RabbitMQ安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/21/tencent-bk-install.html">腾讯蓝鲸安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/17/Ansible-Playbook-Install-Nginx.html">Ansible Playbook编译安装Nginx</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/16/Ansible-Tower-%E5%AE%89%E8%A3%85.html">Ansible Tower安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/16/Nginx-Make-Install.html">Nginx编译安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/15/pinpoint-install.html">Pinpoint (APM)安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/14/SQL-%E6%97%B6%E9%97%B4%E8%BD%AC%E6%8D%A2.html">SQL 时间转换</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/14/bk-cmdb-install.html">腾讯蓝鲸CMDB安装</a>
+    </li>
+  
+</ul>
+        <ul>
+          
+          <!-- <li><a class="buttons github" href="">View On GitHub</a></li> -->
+        </ul>
+
+        
+
+        
+      </header>
+
+      <section>
+        <ul>
+  <li>
+    <p><strong>被管机要求</strong>
+Python 版本 2.4 或以上.如果版本低于 Python 2.5 ,还需要额外安装一个模块:python-simplejson
+不支持Python3，可以通过命令安装Python2
+ansible myhost –sudo -m raw -a “yum install -y python2 python-simplejson”
+如果被管节点上开启了SElinux,你需要安装libselinux-python</p>
+  </li>
+  <li>
+    <p><strong>查看ansible模块帮助</strong><br />
+ansible-doc «模块名字»</p>
+  </li>
+  <li><strong>敏感数据加密</strong>
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@haproxy demo]# <span class="nb">cat </span>default/main.yaml <span class="c">#源文件内容</span>
+password: 123456
+<span class="o">[</span>root@haproxy demo]# <span class="nb">cat </span>secret.txt <span class="c">#加密解密的密码</span>
+redhat
+<span class="o">[</span>root@haproxy demo]# ansible-vault encrypt default/main.yaml  <span class="c">#加密文件</span>
+New Vault password: 
+Confirm New Vault password: 
+Encryption successful
+<span class="o">[</span>root@haproxy demo]# <span class="nb">cat </span>default/main.yaml <span class="c">#加密后的文件</span>
+<span class="nv">$ANSIBLE_VAULT</span><span class="p">;</span>1.1<span class="p">;</span>AES256
+36393064373430643032386637366361653638646661613831303434633665303661336238383233
+3563663132343464393732633736656337343439356563340a306234373730353461383437336635
+34353761346430396265326537663632333234623465653131666132653334326265363233336462
+3634643239323964350a636136643637383263636666383164386137313236353866346237336163
+39623738363864393733323134393035326438613537663461313534616332323131
+<span class="o">[</span>root@haproxy demo]# ansible-vault view default/main.yaml <span class="c">#查看加密的文件</span>
+Vault password: 
+password: 123456
+<span class="o">[</span>root@haproxy demo]# ansible-vault edit default/main.yaml <span class="c">#编辑加密的文件</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>在playbook中使用加密文件</strong>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  [root@haproxy demo]# ansible-playbook hello-word.yaml --vault-password-file secret.txt
+
+  PLAY [say 'hello word'] *********************************************************
+
+  TASK [Gathering Facts] **********************************************************
+  ok: [192.168.1.107]
+
+  TASK [echo 'hello world'] *******************************************************
+  changed: [192.168.1.107]
+
+  TASK [print sdtout] *************************************************************
+  ok: [192.168.1.107] =&gt; {
+      "msg": 123456
+  }
+
+  PLAY RECAP **********************************************************************
+  192.168.1.107              : ok=3    changed=1    unreachable=0    failed=0   
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>动态主机清单</strong><br />
+动态主机清单实际就是一个脚本，这个脚本必须支持2个参数(–list 和 –host)，返回内容为json格式的host信息，执行ansible命令或playbook时必须加-i参数指定这个脚本的位置</p>
+  </li>
+  <li><strong>常用模块</strong></li>
+  <li>yum<br />
+[root@tower ~]# ansible web -m yum -a “name=httpd state=present”</li>
+  <li>user<br />
+[root@tower ~]# ansible web -m user -a “name=user1 group=root”</li>
+  <li>
+    <p>git<br />
+[root@tower ~]# ansible web -m git -a “repo=https://github.com/cakephp/cakephp.git version=3.6.0 dest=~/test/”</p>
+  </li>
+  <li><strong>本地执行module</strong>
+一个自定义的module，调用系统nc命令检查端口是否被占用，但被管机未安装nc命令，那么可以通过在本地执行这个module。有两种方式可以实现：
+    <ol>
+      <li>通过代理的方式（推荐）</li>
+    </ol>
+  </li>
+  <li>name: smoke test
+can_reach: host= port=
+delegate_to: localhost
+    <ol>
+      <li>通过local_action模块实现</li>
+    </ol>
+  </li>
+  <li>
+    <p>name: smoke test
+local_action: can_reach host= port=</p>
+  </li>
+  <li><strong>Windows被管机</strong>
+    <ol>
+      <li>管理节点（必须是Linux）安装pywinrm模块
+pip install http://github.com/diyan/pywinrm/archive/master.zip#egg=pywinrm</li>
+      <li>Windows被管节点必须是PowerShell 3.0以上（Windows 7 SP1 ,Windows Server 2008 SP1以上）
+在Powershell中执行https://github.com/cchurch/ansible/blob/devel/examples/scripts/upgrade_to_ps3.ps1</li>
+      <li>Windows被管节点需要打开winrm服务
+在Powershell中执行https://github.com/ansible/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1</li>
+    </ol>
+  </li>
+</ul>
+
+<p>winrm远程连接测试
+winrs -r:http://192.168.1.81:5985/wsman -u:administrator -p:’1qaz@WSX’ ipconfig</p>
+
+<p>hosts文件样例</p>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[root@bkcmdb ~]</span><span class="c"># cat /etc/ansible/hosts 
+</span><span class="nn">[win]</span>
+<span class="err">192.168.1.81</span> <span class="py">ansible_ssh_host</span><span class="p">=</span><span class="s">192.168.1.81 ansible_ssh_port=5985 ansible_ssh_user='administrator' ansible_ssh_pass='1qaz@WSX' ansible_connection=w</span>
+<span class="err">inrm</span> <span class="py">ansible_winrm_server_cert_validation</span><span class="p">=</span><span class="s">ignore</span>
+<span class="nn">[root@bkcmdb ~]</span><span class="c"># ansible all -m win_ping
+</span><span class="err">192.168.1.81</span> <span class="err">|</span> <span class="py">SUCCESS</span> <span class="p">=</span><span class="s">&gt; {</span>
+    <span class="err">"changed":</span> <span class="err">false,</span> 
+    <span class="err">"ping":</span> <span class="err">"pong"</span>
+<span class="err">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>连接VCenter 通过template创建虚拟机</strong></li>
+</ul>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># more create_vm.yaml </span>
+<span class="nn">---</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">demo</span>
+  <span class="na">hosts</span><span class="pi">:</span> <span class="s">all</span>
+  <span class="na">gather_facts</span><span class="pi">:</span> <span class="s">no</span>
+  <span class="na">tasks</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Create a VM from a template</span>
+      <span class="na">vmware_guest</span><span class="pi">:</span>
+        <span class="na">hostname</span><span class="pi">:</span> <span class="s">vcenter.infodt.com</span>    <span class="c1"># VCenter地址</span>
+        <span class="na">username</span><span class="pi">:</span> <span class="s">administrator@infodt.com</span>  <span class="c1"># VCenter账号</span>
+        <span class="na">password</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1qazXDR%"</span>  <span class="c1"># VCenter密码</span>
+        <span class="na">validate_certs</span><span class="pi">:</span> <span class="s">no</span>  <span class="c1"># 不验证VCenter SSL证书有效性</span>
+        <span class="na">datacenter</span><span class="pi">:</span> <span class="s">Datacenter1</span>  <span class="c1"># 新虚拟机对应的datacenter名称</span>
+        <span class="na">name</span><span class="pi">:</span> <span class="s">testvm_1</span>  <span class="c1"># 新虚拟机名称</span>
+        <span class="na">folder</span><span class="pi">:</span> <span class="s">/Datacenter1/vm</span>  <span class="c1"># 新虚拟机所在的目录</span>
+        <span class="na">esxi_hostname</span><span class="pi">:</span> <span class="s">192.168.1.58</span>  <span class="c1"># 新虚拟机对应的ESXi名称</span>
+        <span class="na">state</span><span class="pi">:</span> <span class="s">poweredon</span>  <span class="c1"># 克隆完成后打开虚拟机</span>
+        <span class="na">template</span><span class="pi">:</span> <span class="s">centos-temp</span>  <span class="c1"># 虚拟机模板</span>
+        <span class="na">disk</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">size_gb</span><span class="pi">:</span> <span class="s">10</span>
+          <span class="na">type</span><span class="pi">:</span> <span class="s">thin</span>
+          <span class="na">datastore</span><span class="pi">:</span> <span class="s">datastore1</span>
+        <span class="na">hardware</span><span class="pi">:</span>
+          <span class="na">memory_mb</span><span class="pi">:</span> <span class="s">800</span>
+          <span class="na">num_cpus</span><span class="pi">:</span> <span class="s">1</span>
+        <span class="na">networks</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">VM Network</span>
+          <span class="na">ip</span><span class="pi">:</span> <span class="s">192.168.1.61</span>
+          <span class="na">netmask</span><span class="pi">:</span> <span class="s">255.255.255.0</span>
+          <span class="na">gateway</span><span class="pi">:</span> <span class="s">192.168.1.1</span>
+        <span class="na">customization</span><span class="pi">:</span>
+          <span class="na">autologon</span><span class="pi">:</span> <span class="s">yes</span>
+          <span class="na">dns_servers</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s">192.168.1.30</span>
+            <span class="pi">-</span> <span class="s">8.8.8.8</span>
+          <span class="na">password</span><span class="pi">:</span> <span class="s">new_vm_password</span>
+          <span class="na">hostname</span><span class="pi">:</span> <span class="s">vm2</span>  <span class="c1"># 新虚拟机的主机名</span>
+          <span class="na">domain</span><span class="pi">:</span> <span class="s">infodt.com</span>  <span class="c1"># 新虚拟机的域名</span>
+        <span class="na">wait_for_ip_address</span><span class="pi">:</span> <span class="s">yes</span>
+      <span class="na">delegate_to</span><span class="pi">:</span> <span class="s">localhost</span>
+      <span class="na">register</span><span class="pi">:</span> <span class="s">deploy</span>
+<span class="c1"># more remove_vm.yaml </span>
+<span class="nn">---</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">demo</span>
+  <span class="na">hosts</span><span class="pi">:</span> <span class="s">all</span>
+  <span class="na">gather_facts</span><span class="pi">:</span> <span class="s">no</span>
+  <span class="na">tasks</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Remove a VM by name</span>
+      <span class="na">vmware_guest</span><span class="pi">:</span>
+        <span class="na">hostname</span><span class="pi">:</span> <span class="s">vcenter.infodt.com</span>
+        <span class="na">username</span><span class="pi">:</span> <span class="s">administrator@infodt.com</span>
+        <span class="na">password</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1qazXDR%"</span>
+        <span class="na">validate_certs</span><span class="pi">:</span> <span class="s">no</span>
+        <span class="na">force</span><span class="pi">:</span> <span class="no">true</span>
+        <span class="na">folder</span><span class="pi">:</span> <span class="s">/Datacenter1/vm</span>
+        <span class="na">name</span><span class="pi">:</span> <span class="s">testvm_1</span>
+        <span class="na">state</span><span class="pi">:</span> <span class="s">absent</span>
+      <span class="na">delegate_to</span><span class="pi">:</span> <span class="s">localhost</span>
+</code></pre></div></div>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MBookPro:ansible mervin<span class="nv">$ </span>ansible-playbook <span class="nt">-i</span> hosts create_vm.yaml 
+
+PLAY <span class="o">[</span>demo] <span class="k">****************************************************************************</span>
+
+TASK <span class="o">[</span>Create a VM from a template] <span class="k">*****************************************************</span>
+changed: <span class="o">[</span>192.168.1.59 -&gt; localhost]
+
+PLAY RECAP <span class="k">*****************************************************************************</span>
+192.168.1.59               : <span class="nv">ok</span><span class="o">=</span>1    <span class="nv">changed</span><span class="o">=</span>1    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0   
+
+MBookPro:ansible mervin<span class="nv">$ </span>ansible-playbook <span class="nt">-i</span> hosts remove_vm.yaml 
+
+PLAY <span class="o">[</span>demo] <span class="k">****************************************************************************</span>
+
+TASK <span class="o">[</span>Remove a VM by name] <span class="k">*************************************************************</span>
+changed: <span class="o">[</span>192.168.1.59 -&gt; localhost]
+
+PLAY RECAP <span class="k">*****************************************************************************</span>
+192.168.1.59               : <span class="nv">ok</span><span class="o">=</span>1    <span class="nv">changed</span><span class="o">=</span>1    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0   
+</code></pre></div></div>
+
+<ul>
+  <li><strong>常见问题1</strong>
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@tower ~]# ansible all <span class="nt">-m</span> ping
+<span class="o">[</span>WARNING]: Found both group and host with same name: localhost
+localhost | FAILED! <span class="o">=&gt;</span> <span class="o">{</span>
+  <span class="s2">"msg"</span>: <span class="s2">"Using a SSH password instead of a key is not possible because Host Key 
+  checking is enabled and sshpass does not support this.  Please add this host's 
+  fingerprint to your known_hosts file to manage this host."</span>
+<span class="o">}</span>
+</code></pre></div>    </div>
+    <p>解决办法：禁用host_key 检查</p>
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@tower ~]# vi /etc/ansible/ansible.cfg 
+host_key_checking <span class="o">=</span> False
+</code></pre></div>    </div>
+  </li>
+  <li><strong>常见故障2</strong>
+管理Windows报错 the specified credentials were rejected by the server
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@bkcmdb ~]# ansible all <span class="nt">-m</span> win_ping
+192.168.1.81 | UNREACHABLE! <span class="o">=&gt;</span> <span class="o">{</span>
+  <span class="s2">"changed"</span>: <span class="nb">false</span>, 
+  <span class="s2">"msg"</span>: <span class="s2">"plaintext: the specified credentials were rejected by the server"</span>, 
+  <span class="s2">"unreachable"</span>: <span class="nb">true</span>
+<span class="o">}</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>解决办法,允许Basic认证方式,允许未加密方式访问</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Set-Item -Path WSMan:\localhost\Service\Auth\Basic -Value $true
+winrm set winrm/config/service '@{AllowUnencrypted="true"}'
+</code></pre></div></div>
+
+      </section>
+
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>

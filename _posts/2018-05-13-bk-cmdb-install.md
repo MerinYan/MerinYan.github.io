@@ -10,6 +10,7 @@ GitHub：	[https://github.com/Tencent/bk-cmdb](https://github.com/Tencent/bk-cmd
 
 ## zookeeper 安装配置:
 ```shell
+[root@bkcmdb medias]# wget https://archive.apache.org/dist/zookeeper/zookeeper-3.4.11/zookeeper-3.4.11.tar.gz
 [root@bkcmdb medias]# tar zxvf zookeeper-3.4.11.tar.gz        
 [root@bkcmdb medias]# mv zookeeper-3.4.11 /usr/local/zookeeper
 [root@bkcmdb medias]# cd  /usr/local/zookeeper/
@@ -22,6 +23,7 @@ GitHub：	[https://github.com/Tencent/bk-cmdb](https://github.com/Tencent/bk-cmd
 
 1. redis 安装:
 ```shell
+[root@bkcmdb medias]# wget http://download.redis.io/releases/redis-3.2.11.tar.gz
 [root@bkcmdb medias]# tar zxvf redis-3.2.11.tar.gz 
 [root@bkcmdb medias]# cd redis-3.2.11 
 [root@bkcmdb redis]# make MALLOC=libc
@@ -64,6 +66,7 @@ OK
 ## Mongodb
 1. Mongodb 安装:
 ```shell
+[root@bkcmdb bin]# wget http://downloads.mongodb.org/linux/mongodb-linux-x86_64-rhel70-2.8.0-rc5.tgz?_ga=2.109966917.1194957577.1522583108-162706957.1522583108 -O ./mongodb-linux-x86_64-rhel70-2.8.0-rc5.tgz
 [root@bkcmdb bin]# tar zxvf mongodb-linux-x86_64-rhel70-2.8.0-rc5.tgz 
 [root@bkcmdb bin]# mv mongodb-linux-x86_64-rhel70-2.8.0-rc5 /usr/local/mongodb
 [root@bkcmdb bin]# cd /usr/local/mongodb/bin/
@@ -108,6 +111,7 @@ Successfully added user: {
 	
 ## bk/cmdb 安装配置：
 ```shell
+[root@bkcmdb medias]# wget http://bkopen-10032816.file.myqcloud.com/cmdb3/cmdb-3.0.6.tar.gz
 [root@bkcmdb medias]# tar zxvf cmdb-3.0.6.tar.gz -C /data/
 [root@bkcmdb medias]# cd /data/cmdb/
 #初始化配置文件
@@ -264,4 +268,56 @@ curl -l -H "Content-type: application/json" -H "HTTP_BLUEKING_SUPPLIER_ID: 0" -H
                 }]
         }
 }
+```
+
+## API调用（Python）：
+
+添加新主机：
+```python
+# add_host.py
+import http.client
+import json
+import argparse
+
+
+# 接收输入参数
+def parse_args():
+    parser = argparse.ArgumentParser(description="example: python curl.py --cmdb-server='localhost' "
+                                                 "--host-ip='1.1.1.1' ")
+    parser.add_argument('--cmdb-server', type=str, default='127.0.0.1')
+    parser.add_argument('--host-ip', type=str, default='127.0.0.1')
+    return parser.parse_args()
+
+
+# HTTP POST 请求
+def call_api_add_host(cmdb_server, host_ip):
+    request_data = json.dumps(
+        {"host_info": {"0": {"bk_host_innerip": host_ip, "import_from": "excel", "bk_cloud_id": 0}},
+         "bk_supplier_id": 0})
+    raquel = "http://%s:8080/api/v3/hosts/add" % cmdb_server
+    header = {"Content-type": "application/json", "HTTP_BLUEKING_SUPPLIER_ID": "0", "BK_USER": "0"}
+    conn = http.client.HTTPConnection(cmdb_server, 8080)
+    conn.request('POST', raquel, request_data, header)
+    response = conn.getresponse()
+    res = response.read()
+    # print(raquel)
+    # print(header)
+    # print(request_data)
+    print(res)
+
+
+def main():
+    args = parse_args()
+    # print(args.cmdb_server)
+    # print(args.host_ip)
+    call_api_add_host(args.cmdb_server, args.host_ip)
+
+
+if __name__ == '__main__':
+    main()
+```
+调用测试:
+```shell
+MBookPro:untitled mervin$ python add_host.py --cmdb-server='192.168.1.90' --host-ip='2.2.2.2'
+b'{"result":true,"bk_error_code":0,"bk_error_msg":"success","data":{"success":["0"]}}'
 ```

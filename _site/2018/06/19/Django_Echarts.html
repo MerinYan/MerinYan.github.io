@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>Django Echarts | My Notes</title>
+<meta name="generator" content="Jekyll v3.8.1" />
+<meta property="og:title" content="Django Echarts" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="我的在线笔记" />
+<meta property="og:description" content="我的在线笔记" />
+<link rel="canonical" href="http://localhost:4000/2018/06/19/Django_Echarts.html" />
+<meta property="og:url" content="http://localhost:4000/2018/06/19/Django_Echarts.html" />
+<meta property="og:site_name" content="My Notes" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-06-19T10:45:52+08:00" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2018/06/19/Django_Echarts.html"},"url":"http://localhost:4000/2018/06/19/Django_Echarts.html","description":"我的在线笔记","headline":"Django Echarts","dateModified":"2018-06-19T10:45:52+08:00","datePublished":"2018-06-19T10:45:52+08:00","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <script src="/assets/js/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">My Notes</h1>
+        <p class="header">我的在线笔记</p>
+<ul>
+  
+    <li>
+      <a href="/2018/06/19/Django_Echarts.html">Django Echarts</a>
+    </li>
+  
+    <li>
+      <a href="/2018/06/01/ansible-comment.html">Ansible笔记</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/31/Mac-MySQL-Install.html">Mac Mysql 安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/25/Redhat-add-disk-to-lvm.html">Redhat 添加新硬盘到LVM</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/25/Redhat-Openshift-3.7-install.html">Redhat Openshift 3.7 安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/23/rabbitmq-Install.html">RabbitMQ安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/21/tencent-bk-install.html">腾讯蓝鲸安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/17/Ansible-Playbook-Install-Nginx.html">Ansible Playbook编译安装Nginx</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/16/Ansible-Tower-%E5%AE%89%E8%A3%85.html">Ansible Tower安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/16/Nginx-Make-Install.html">Nginx编译安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/15/pinpoint-install.html">Pinpoint (APM)安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/14/SQL-%E6%97%B6%E9%97%B4%E8%BD%AC%E6%8D%A2.html">SQL 时间转换</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/14/bk-cmdb-install.html">腾讯蓝鲸CMDB安装</a>
+    </li>
+  
+</ul>
+        <ul>
+          
+          <!-- <li><a class="buttons github" href="">View On GitHub</a></li> -->
+        </ul>
+
+        
+
+        
+      </header>
+
+      <section>
+        <p><img src="http://localhost:4000/assets/images/2018-06-19-Django-Echarts.png" alt="Branching" /></p>
+
+<p>*** 引用Echarts js<br />
+下载js：echarts.common.min.js<br />
+添加到应用中：people/static/people/js/echarts.common.min.js</p>
+
+<p>*** 修改views.py</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">getbar</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="s">'Mon'</span><span class="p">,</span> <span class="s">'Tue'</span><span class="p">,</span> <span class="s">'Wed'</span><span class="p">,</span> <span class="s">'Thu'</span><span class="p">,</span> <span class="s">'Fri'</span><span class="p">,</span> <span class="s">'Sat'</span><span class="p">,</span> <span class="s">'Sun'</span><span class="p">]</span>
+    <span class="n">xr</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">'type'</span><span class="p">:</span> <span class="s">'category'</span><span class="p">,</span>
+        <span class="s">'data'</span><span class="p">:</span> <span class="n">x</span>
+    <span class="p">}</span>
+    <span class="n">y1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">820</span> <span class="p">,</span> <span class="mi">932</span> <span class="p">,</span> <span class="mi">901</span> <span class="p">,</span> <span class="mi">934</span> <span class="p">,</span> <span class="mi">1290</span> <span class="p">,</span> <span class="mi">1330</span> <span class="p">,</span> <span class="mi">1320</span><span class="p">]</span>
+    <span class="n">y2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">80</span> <span class="p">,</span> <span class="mi">92</span> <span class="p">,</span> <span class="mi">91</span> <span class="p">,</span> <span class="mi">94</span> <span class="p">,</span> <span class="mi">290</span> <span class="p">,</span> <span class="mi">130</span> <span class="p">,</span> <span class="mi">132</span><span class="p">]</span>
+    <span class="n">yr1</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">'type'</span><span class="p">:</span> <span class="s">'line'</span><span class="p">,</span>
+        <span class="s">'data'</span><span class="p">:</span> <span class="n">y1</span><span class="p">,</span>
+        <span class="s">'smooth'</span><span class="p">:</span> <span class="bp">True</span>
+    <span class="p">}</span>
+    <span class="n">yr2</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">'type'</span><span class="p">:</span> <span class="s">'line'</span> <span class="p">,</span>
+        <span class="s">'data'</span><span class="p">:</span> <span class="n">y2</span> <span class="p">,</span>
+        <span class="s">'smooth'</span><span class="p">:</span> <span class="bp">True</span>
+    <span class="p">}</span>
+    <span class="n">dict_from_html</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">'rx'</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">xr</span><span class="p">),</span>
+        <span class="s">'ry'</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">([</span><span class="n">yr1</span><span class="p">,</span><span class="n">yr2</span><span class="p">]),</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">'people/line.html'</span><span class="p">,</span> <span class="n">dict_from_html</span><span class="p">)</span>
+</code></pre></div></div>
+
+      </section>
+
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>

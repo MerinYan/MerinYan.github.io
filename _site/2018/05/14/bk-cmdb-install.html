@@ -35,6 +35,18 @@
 <ul>
   
     <li>
+      <a href="/2018/06/19/Django_Echarts.html">Django Echarts</a>
+    </li>
+  
+    <li>
+      <a href="/2018/06/01/ansible-comment.html">Ansible笔记</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/31/Mac-MySQL-Install.html">Mac Mysql 安装</a>
+    </li>
+  
+    <li>
       <a href="/2018/05/25/Redhat-add-disk-to-lvm.html">Redhat 添加新硬盘到LVM</a>
     </li>
   
@@ -91,7 +103,8 @@
 GitHub：	<a href="https://github.com/Tencent/bk-cmdb">https://github.com/Tencent/bk-cmdb</a></p>
 
 <h2 id="zookeeper-安装配置">zookeeper 安装配置:</h2>
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@bkcmdb medias]# <span class="nb">tar </span>zxvf zookeeper-3.4.11.tar.gz        
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@bkcmdb medias]# wget https://archive.apache.org/dist/zookeeper/zookeeper-3.4.11/zookeeper-3.4.11.tar.gz
+<span class="o">[</span>root@bkcmdb medias]# <span class="nb">tar </span>zxvf zookeeper-3.4.11.tar.gz        
 <span class="o">[</span>root@bkcmdb medias]# <span class="nb">mv </span>zookeeper-3.4.11 /usr/local/zookeeper
 <span class="o">[</span>root@bkcmdb medias]# <span class="nb">cd</span>  /usr/local/zookeeper/
 <span class="o">[</span>root@bkcmdb zookeeper]# <span class="nb">cp </span>conf/zoo_sample.cfg conf/zoo.cfg
@@ -103,7 +116,8 @@ GitHub：	<a href="https://github.com/Tencent/bk-cmdb">https://github.com/Tencen
 
 <ol>
   <li>redis 安装:
-    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@bkcmdb medias]# <span class="nb">tar </span>zxvf redis-3.2.11.tar.gz 
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@bkcmdb medias]# wget http://download.redis.io/releases/redis-3.2.11.tar.gz
+<span class="o">[</span>root@bkcmdb medias]# <span class="nb">tar </span>zxvf redis-3.2.11.tar.gz 
 <span class="o">[</span>root@bkcmdb medias]# <span class="nb">cd </span>redis-3.2.11 
 <span class="o">[</span>root@bkcmdb redis]# make <span class="nv">MALLOC</span><span class="o">=</span>libc
 <span class="o">[</span>root@bkcmdb redis]# make <span class="nb">install</span>
@@ -144,7 +158,8 @@ OK
 <h2 id="mongodb">Mongodb</h2>
 <ol>
   <li>Mongodb 安装:
-    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@bkcmdb bin]# <span class="nb">tar </span>zxvf mongodb-linux-x86_64-rhel70-2.8.0-rc5.tgz 
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@bkcmdb bin]# wget http://downloads.mongodb.org/linux/mongodb-linux-x86_64-rhel70-2.8.0-rc5.tgz?_ga<span class="o">=</span>2.109966917.1194957577.1522583108-162706957.1522583108 <span class="nt">-O</span> ./mongodb-linux-x86_64-rhel70-2.8.0-rc5.tgz
+<span class="o">[</span>root@bkcmdb bin]# <span class="nb">tar </span>zxvf mongodb-linux-x86_64-rhel70-2.8.0-rc5.tgz 
 <span class="o">[</span>root@bkcmdb bin]# <span class="nb">mv </span>mongodb-linux-x86_64-rhel70-2.8.0-rc5 /usr/local/mongodb
 <span class="o">[</span>root@bkcmdb bin]# <span class="nb">cd</span> /usr/local/mongodb/bin/
 <span class="o">[</span>root@bkcmdb bin]# ./mongod <span class="nt">--dbpath</span><span class="o">=</span>/data/db <span class="nt">--syslog</span> <span class="nt">--fork</span>
@@ -188,7 +203,8 @@ Successfully added user: <span class="o">{</span>
 </ol>
 
 <h2 id="bkcmdb-安装配置">bk/cmdb 安装配置：</h2>
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@bkcmdb medias]# <span class="nb">tar </span>zxvf cmdb-3.0.6.tar.gz <span class="nt">-C</span> /data/
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@bkcmdb medias]# wget http://bkopen-10032816.file.myqcloud.com/cmdb3/cmdb-3.0.6.tar.gz
+<span class="o">[</span>root@bkcmdb medias]# <span class="nb">tar </span>zxvf cmdb-3.0.6.tar.gz <span class="nt">-C</span> /data/
 <span class="o">[</span>root@bkcmdb medias]# <span class="nb">cd</span> /data/cmdb/
 <span class="c">#初始化配置文件</span>
 <span class="o">[</span>root@bkcmdb cmdb]# python init.py <span class="nt">--discovery</span> 192.168.1.54:2181 <span class="nt">--database</span> cmdb <span class="nt">--redis_ip</span> 192.168.1.54 <span class="nt">--redis_port</span> 6379 <span class="nt">--redis_pass</span> foobared <span class="nt">--mongo_ip</span> 192.168.1.54 <span class="nt">--mongo_port</span> 27017 <span class="nt">--mongo_user</span> cc <span class="nt">--mongo_pass</span> cc <span class="nt">--blueking_cmdb_url</span> http://192.168.1.54:8083 <span class="nt">--listen_port</span> 8083
@@ -340,6 +356,56 @@ Successfully added user: <span class="o">{</span>
         </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
+
+<h2 id="api调用python">API调用（Python）：</h2>
+
+<p>添加新主机：</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># add_host.py</span>
+<span class="kn">import</span> <span class="nn">http.client</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+
+
+<span class="c"># 接收输入参数</span>
+<span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s">"example: python curl.py --cmdb-server='localhost' "</span>
+                                                 <span class="s">"--host-ip='1.1.1.1' "</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">'--cmdb-server'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s">'127.0.0.1'</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">'--host-ip'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s">'127.0.0.1'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+
+<span class="c"># HTTP POST 请求</span>
+<span class="k">def</span> <span class="nf">call_api_add_host</span><span class="p">(</span><span class="n">cmdb_server</span><span class="p">,</span> <span class="n">host_ip</span><span class="p">):</span>
+    <span class="n">request_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
+        <span class="p">{</span><span class="s">"host_info"</span><span class="p">:</span> <span class="p">{</span><span class="s">"0"</span><span class="p">:</span> <span class="p">{</span><span class="s">"bk_host_innerip"</span><span class="p">:</span> <span class="n">host_ip</span><span class="p">,</span> <span class="s">"import_from"</span><span class="p">:</span> <span class="s">"excel"</span><span class="p">,</span> <span class="s">"bk_cloud_id"</span><span class="p">:</span> <span class="mi">0</span><span class="p">}},</span>
+         <span class="s">"bk_supplier_id"</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
+    <span class="n">raquel</span> <span class="o">=</span> <span class="s">"http://</span><span class="si">%</span><span class="s">s:8080/api/v3/hosts/add"</span> <span class="o">%</span> <span class="n">cmdb_server</span>
+    <span class="n">header</span> <span class="o">=</span> <span class="p">{</span><span class="s">"Content-type"</span><span class="p">:</span> <span class="s">"application/json"</span><span class="p">,</span> <span class="s">"HTTP_BLUEKING_SUPPLIER_ID"</span><span class="p">:</span> <span class="s">"0"</span><span class="p">,</span> <span class="s">"BK_USER"</span><span class="p">:</span> <span class="s">"0"</span><span class="p">}</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">HTTPConnection</span><span class="p">(</span><span class="n">cmdb_server</span><span class="p">,</span> <span class="mi">8080</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s">'POST'</span><span class="p">,</span> <span class="n">raquel</span><span class="p">,</span> <span class="n">request_data</span><span class="p">,</span> <span class="n">header</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">getresponse</span><span class="p">()</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="c"># print(raquel)</span>
+    <span class="c"># print(header)</span>
+    <span class="c"># print(request_data)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
+    <span class="c"># print(args.cmdb_server)</span>
+    <span class="c"># print(args.host_ip)</span>
+    <span class="n">call_api_add_host</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">cmdb_server</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">host_ip</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</code></pre></div></div>
+<p>调用测试:</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MBookPro:untitled mervin<span class="nv">$ </span>python add_host.py <span class="nt">--cmdb-server</span><span class="o">=</span><span class="s1">'192.168.1.90'</span> <span class="nt">--host-ip</span><span class="o">=</span><span class="s1">'2.2.2.2'</span>
+b<span class="s1">'{"result":true,"bk_error_code":0,"bk_error_msg":"success","data":{"success":["0"]}}'</span>
+</code></pre></div></div>
 
       </section>
 
