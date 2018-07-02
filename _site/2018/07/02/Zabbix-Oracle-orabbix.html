@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>Zabbix监控Oracle | My Notes</title>
+<meta name="generator" content="Jekyll v3.8.1" />
+<meta property="og:title" content="Zabbix监控Oracle" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Orabbix是一个第三方的插件，用于监控Oracle数据库的一些性能指标，如DBsize、Filesize、SGA内存使用率、缓存命中率等。 Orabbix下载地址：http://www.smartmarmot.com/product/orabbix/download/ Orabbix相关文档：http://www.smartmarmot.com/wiki/index.php?title=Orabbix" />
+<meta property="og:description" content="Orabbix是一个第三方的插件，用于监控Oracle数据库的一些性能指标，如DBsize、Filesize、SGA内存使用率、缓存命中率等。 Orabbix下载地址：http://www.smartmarmot.com/product/orabbix/download/ Orabbix相关文档：http://www.smartmarmot.com/wiki/index.php?title=Orabbix" />
+<link rel="canonical" href="http://localhost:4000/2018/07/02/Zabbix-Oracle-orabbix.html" />
+<meta property="og:url" content="http://localhost:4000/2018/07/02/Zabbix-Oracle-orabbix.html" />
+<meta property="og:site_name" content="My Notes" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-07-02T15:42:54+08:00" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2018/07/02/Zabbix-Oracle-orabbix.html"},"url":"http://localhost:4000/2018/07/02/Zabbix-Oracle-orabbix.html","description":"Orabbix是一个第三方的插件，用于监控Oracle数据库的一些性能指标，如DBsize、Filesize、SGA内存使用率、缓存命中率等。 Orabbix下载地址：http://www.smartmarmot.com/product/orabbix/download/ Orabbix相关文档：http://www.smartmarmot.com/wiki/index.php?title=Orabbix","headline":"Zabbix监控Oracle","dateModified":"2018-07-02T15:42:54+08:00","datePublished":"2018-07-02T15:42:54+08:00","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <script src="/assets/js/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">My Notes</h1>
+        <p class="header">我的在线笔记</p>
+<ul>
+  
+    <li>
+      <a href="/2018/07/02/Zabbix-Oracle-orabbix.html">Zabbix监控Oracle</a>
+    </li>
+  
+    <li>
+      <a href="/2018/06/19/Django_Echarts.html">Django Echarts</a>
+    </li>
+  
+    <li>
+      <a href="/2018/06/01/ansible-comment.html">Ansible笔记</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/31/Mac-MySQL-Install.html">Mac Mysql 安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/25/Redhat-add-disk-to-lvm.html">Redhat 添加新硬盘到LVM</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/25/Redhat-Openshift-3.7-install.html">Redhat Openshift 3.7 安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/23/rabbitmq-Install.html">RabbitMQ安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/21/tencent-bk-install.html">腾讯蓝鲸安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/17/Ansible-Playbook-Install-Nginx.html">Ansible Playbook编译安装Nginx</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/16/Ansible-Tower-%E5%AE%89%E8%A3%85.html">Ansible Tower安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/16/Nginx-Make-Install.html">Nginx编译安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/15/pinpoint-install.html">Pinpoint (APM)安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/14/SQL-%E6%97%B6%E9%97%B4%E8%BD%AC%E6%8D%A2.html">SQL 时间转换</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/14/bk-cmdb-install.html">腾讯蓝鲸CMDB安装</a>
+    </li>
+  
+</ul>
+        <ul>
+          
+          <!-- <li><a class="buttons github" href="">View On GitHub</a></li> -->
+        </ul>
+
+        
+
+        
+      </header>
+
+      <section>
+        <p>Orabbix是一个第三方的插件，用于监控Oracle数据库的一些性能指标，如DBsize、Filesize、SGA内存使用率、缓存命中率等。<br />
+Orabbix下载地址：<a href="http://www.smartmarmot.com/product/orabbix/download/">http://www.smartmarmot.com/product/orabbix/download/</a><br />
+Orabbix相关文档：<a href="http://www.smartmarmot.com/wiki/index.php?title=Orabbix">http://www.smartmarmot.com/wiki/index.php?title=Orabbix</a></p>
+
+<p>插件架构：Orabbix通过JDBC协议获取Oracle性能信息，然后通过Zabbix协议将信息汇总到Zabbix中。<br />
+<img src="http://localhost:4000/assets/images/2018-07-02-Orabbix_architecture.png" alt="架构图" /></p>
+
+<h3 id="客户端创建oracle用户并授权">客户端创建Oracle用户并授权：</h3>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">USER</span> <span class="n">ZABBIX</span>
+<span class="n">IDENTIFIED</span> <span class="k">BY</span> <span class="n">REDHAT</span>
+<span class="k">DEFAULT</span> <span class="n">TABLESPACE</span> <span class="n">USERS</span>
+<span class="k">TEMPORARY</span> <span class="n">TABLESPACE</span> <span class="k">TEMP</span>
+<span class="n">PROFILE</span> <span class="k">DEFAULT</span>
+<span class="n">ACCOUNT</span> <span class="n">UNLOCK</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">ALTER</span> <span class="k">SESSION</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">CREATE</span> <span class="k">SESSION</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">CONNECT</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">ALTER</span> <span class="k">USER</span> <span class="n">ZABBIX</span> <span class="k">DEFAULT</span> <span class="k">ROLE</span> <span class="k">ALL</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">V_</span><span class="err">$</span><span class="n">INSTANCE</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">DBA_USERS</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">V_</span><span class="err">$</span><span class="n">LOG_HISTORY</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">V_</span><span class="err">$</span><span class="k">PARAMETER</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">SYS</span><span class="p">.</span><span class="n">DBA_AUDIT_SESSION</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">V_</span><span class="err">$</span><span class="k">LOCK</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">DBA_REGISTRY</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">V_</span><span class="err">$</span><span class="n">LIBRARYCACHE</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">V_</span><span class="err">$</span><span class="n">SYSSTAT</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">V_</span><span class="err">$</span><span class="k">PARAMETER</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">V_</span><span class="err">$</span><span class="n">LATCH</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">V_</span><span class="err">$</span><span class="n">PGASTAT</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">V_</span><span class="err">$</span><span class="n">SGASTAT</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">V_</span><span class="err">$</span><span class="n">LIBRARYCACHE</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">V_</span><span class="err">$</span><span class="n">PROCESS</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">DBA_DATA_FILES</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">DBA_TEMP_FILES</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">DBA_FREE_SPACE</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">V_</span><span class="err">$</span><span class="n">SYSTEM_EVENT</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">V_</span><span class="err">$</span><span class="k">SESSION</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">V_</span><span class="err">$</span><span class="n">LOG</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">V_</span><span class="err">$</span><span class="n">LOCKED_OBJECT</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">DBA_TABLESPACES</span> <span class="k">TO</span> <span class="n">ZABBIX</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">DBA_OBJECTS</span> <span class="k">TO</span> <span class="n">TIVOLI</span><span class="p">;</span>
+<span class="o">-</span> <span class="err">如果是</span> <span class="n">Oracle</span> <span class="mi">11</span><span class="k">G</span> <span class="err">则需要执行</span><span class="p">:</span>
+<span class="k">exec</span> <span class="n">dbms_network_acl_admin</span><span class="p">.</span><span class="n">create_acl</span><span class="p">(</span><span class="n">acl</span> <span class="o">=&gt;</span> <span class="s1">'resolve.xml'</span><span class="p">,</span><span class="n">description</span> <span class="o">=&gt;</span> <span class="s1">'resolve acl'</span><span class="p">,</span> <span class="n">principal</span> <span class="o">=&gt;</span><span class="s1">'ZABBIX'</span><span class="p">,</span> <span class="n">is_grant</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="n">privilege</span> <span class="o">=&gt;</span> <span class="s1">'resolve'</span><span class="p">);</span>
+<span class="k">exec</span> <span class="n">dbms_network_acl_admin</span><span class="p">.</span><span class="n">assign_acl</span><span class="p">(</span><span class="n">acl</span> <span class="o">=&gt;</span> <span class="s1">'resolve.xml'</span><span class="p">,</span> <span class="k">host</span> <span class="o">=&gt;</span><span class="s1">'*'</span><span class="p">);</span>
+<span class="k">commit</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="zabbix-server端安装orabbix">Zabbix Server端安装Orabbix</h3>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@redhat74 ~]# unzip orabbix-1.2.3.zip <span class="nt">-d</span> /usr/local/orabbix
+<span class="o">[</span>root@redhat74 ~]# <span class="nb">cp</span> /usr/local/orabbix/init.d/orabbix /etc/init.d/
+<span class="o">[</span>root@redhat74 ~]# vi /etc/init.d/orabbix 
+...
+<span class="nv">orabbix</span><span class="o">=</span>/usr/local/orabbix
+...
+<span class="o">[</span>root@redhat74 ~]# <span class="nb">cd</span> /usr/local/orabbix/conf/config.props.sample
+<span class="o">[</span>root@redhat74 ~]# <span class="nb">cp </span>config.props.sample config.props
+<span class="o">[</span>root@redhat74 ~]# vim config.props
+<span class="c">#comma separed list of Zabbix servers</span>
+<span class="nv">ZabbixServerList</span><span class="o">=</span>ZabbixServer1
+
+ZabbixServer1.Address<span class="o">=</span>192.168.226.200
+ZabbixServer1.Port<span class="o">=</span>10051
+
+<span class="c">#pidFile</span>
+OrabbixDaemon.PidFile<span class="o">=</span>./logs/orabbix.pid
+<span class="c">#frequency of item's refresh</span>
+OrabbixDaemon.Sleep<span class="o">=</span>300
+<span class="c">#MaxThreadNumber should be &gt;= than the number of your databases</span>
+OrabbixDaemon.MaxThreadNumber<span class="o">=</span>100
+
+<span class="c">#put here your databases in a comma separated list</span>
+<span class="c">####注意这里的名称必须和Zabbix中添加的主机item名称相同</span>
+<span class="nv">DatabaseList</span><span class="o">=</span>192.168.226.201
+
+<span class="c">#Configuration of Connection pool</span>
+<span class="c">#if not specified Orabbis is going to use default values (hardcoded)</span>
+<span class="c">#Maximum number of active connection inside pool</span>
+DatabaseList.MaxActive<span class="o">=</span>10
+<span class="c">#The maximum number of milliseconds that the pool will wait </span>
+<span class="c">#(when there are no available connections) for a connection to be returned </span>
+<span class="c">#before throwing an exception, or &lt;= 0 to wait indefinitely. </span>
+DatabaseList.MaxWait<span class="o">=</span>100
+DatabaseList.MaxIdle<span class="o">=</span>1
+
+<span class="c">#define here your connection string for each database</span>
+192.168.226.201.Url<span class="o">=</span>jdbc:oracle:thin:@192.168.226.201:1521:XE
+192.168.226.201.User<span class="o">=</span>ZABBIX1
+192.168.226.201.Password<span class="o">=</span>ZABBIX1
+<span class="c">#Those values are optionals if not specified Orabbix is going to use the general values</span>
+192.168.226.201.MaxActive<span class="o">=</span>10
+192.168.226.201.MaxWait<span class="o">=</span>100
+192.168.226.201.MaxIdle<span class="o">=</span>1
+192.168.226.201.QueryListFile<span class="o">=</span>./conf/query.props
+
+</code></pre></div></div>
+
+<h3 id="导入zabbix模板">导入Zabbix模板</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>从Zabbix上导入模板文件：
+orabbix-1.2.3/template/Orabbix_export_full.xml
+</code></pre></div></div>
+<p><img src="http://localhost:4000/assets/images/2018-07-02-Zabbix-orabbix-importtemplate.png" alt="添加模板" /></p>
+
+<p><img src="http://localhost:4000/assets/images/2018-07-02-Zabbix-orabbix-importtemplate1.png" alt="添加模板" /></p>
+
+<h3 id="为oracle主机关联模板">为Oracle主机关联模板</h3>
+<p><img src="http://localhost:4000/assets/images/2018-07-02-Zabbix-Orabbix-addhost.png" alt="添加主机" /></p>
+
+<p><img src="http://localhost:4000/assets/images/2018-07-02-Zabbix-orabbix-addtemplate.png" alt="关联模板" /></p>
+
+<h3 id="监控效果图">监控效果图</h3>
+<p><img src="http://localhost:4000/assets/images/2018-07-02-Zabbix-orabbix-graph1.png" alt="效果图" /></p>
+
+<p><img src="http://localhost:4000/assets/images/2018-07-02-Zabbix-orabbix-graph2.png" alt="效果图" /></p>
+
+<h3 id="自定义sql监控">自定义SQL监控</h3>
+<p>如果需要添加自定义SQL监控，只需要修改query.props文件即可（需要为这个用户授权）。<br />
+如：新增下面这个SQL监控</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SQL</span><span class="o">&gt;</span> <span class="k">select</span> <span class="n">age</span> <span class="k">from</span> <span class="n">test</span><span class="p">;</span>
+       <span class="n">AGE</span>
+<span class="c1">----------</span>
+        <span class="mi">80</span>
+</code></pre></div></div>
+
+<p>修改配置文件/usr/local/orabbix/conf/query.props</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@redhat74 opt]# vim /usr/local/orabbix/conf/query.props
+...
+QueryList=...,test   # 在QueryList后面添加新查询的名称
+test.Query=select age from test   # 定义查询内容
+test.NoDataFound=none
+...
+</code></pre></div></div>
+
+<p>修改模板，添加一个指标（item）<br />
+<img src="http://localhost:4000/assets/images/2018-07-02-Zabbix-orabbix-add-custom-key.png" alt="效果图" />
+添加对应的阈值设置（trigger）<br />
+<img src="http://localhost:4000/assets/images/2018-07-02-Zabbix-orabbix-add-custom-key1.png" alt="效果图" />
+报警效果图
+<img src="http://localhost:4000/assets/images/2018-07-02-Zabbix-orabbix-add-custom-key2.png" alt="效果图" /></p>
+
+
+      </section>
+
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>

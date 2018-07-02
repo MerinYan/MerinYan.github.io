@@ -40,38 +40,9 @@ def getbar(request):
 ```
 
 *** 创建模板文件  
-people/templates/people/line.html  
-```html
-{% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <!-- 引入 ECharts 文件 使用 static 关键字-->
-    <script src="{% static 'people/js/echarts.common.min.js' %}"></script>
-</head>
-</html>
-<body>
-    <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
-    <div id="main" style="width:800px;height:600px;"></div>
-    <script type="text/javascript">
-        var rx = {{ rx|safe }};
-        var ry = {{ ry|safe }};
-        // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('main'));
-        // 指定图表的配置项和数据
-        option = {
-            xAxis: rx,
-            yAxis: {
-                type: 'value'
-            },
-            series: ry
-        };
-        // 使用刚指定的配置项和数据显示图表
-        myChart.setOption(option);
-    </script>
-</body>
-```
+ 
+[people/templates/people/line.html ]({{site.url}}/assets/file/2018-07-02-line.txt)  
+
 
 整体目录结构
 ```

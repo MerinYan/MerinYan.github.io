@@ -35,6 +35,10 @@
 <ul>
   
     <li>
+      <a href="/2018/07/02/Zabbix-Oracle-orabbix.html">Zabbix监控Oracle</a>
+    </li>
+  
+    <li>
       <a href="/2018/06/19/Django_Echarts.html">Django Echarts</a>
     </li>
   
@@ -128,6 +132,53 @@
         <span class="s">'ry'</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">([</span><span class="n">yr1</span><span class="p">,</span><span class="n">yr2</span><span class="p">]),</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">'people/line.html'</span><span class="p">,</span> <span class="n">dict_from_html</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>*** 创建模板文件</p>
+
+<p><a href="http://localhost:4000/assets/file/2018-07-02-line.txt">people/templates/people/line.html </a></p>
+
+<p>整体目录结构</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(env27) MBookPro:mysite mervin$ tree
+.
+├── manage.py
+├── mysite
+│   ├── __init__.py
+│   ├── __init__.pyc
+│   ├── settings.py
+│   ├── settings.pyc
+│   ├── urls.py
+│   ├── urls.pyc
+│   ├── wsgi.py
+│   └── wsgi.pyc
+├── people
+│   ├── __init__.py
+│   ├── __init__.pyc
+│   ├── admin.py
+│   ├── admin.pyc
+│   ├── apps.py
+│   ├── migrations
+│   │   ├── 0001_initial.py
+│   │   ├── 0001_initial.pyc
+│   │   ├── 0002_article.py
+│   │   ├── 0002_article.pyc
+│   │   ├── __init__.py
+│   │   └── __init__.pyc
+│   ├── models.py
+│   ├── models.pyc
+│   ├── static
+│   │   └── people
+│   │       └── js
+│   │           └── echarts.common.min.js
+│   ├── templates
+│   │   └── people
+│   │       ├── index.html
+│   │       ├── line.html
+│   │       └── pyecharts.html
+│   ├── tests.py
+│   ├── views.py
+│   └── views.pyc
+└── render.html
 </code></pre></div></div>
 
       </section>
