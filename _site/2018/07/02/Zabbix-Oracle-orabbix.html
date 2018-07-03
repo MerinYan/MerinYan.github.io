@@ -153,6 +153,8 @@ Orabbix相关文档：<a href="http://www.smartmarmot.com/wiki/index.php?title=O
 <h3 id="zabbix-server端安装orabbix">Zabbix Server端安装Orabbix</h3>
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@redhat74 ~]# unzip orabbix-1.2.3.zip <span class="nt">-d</span> /usr/local/orabbix
 <span class="o">[</span>root@redhat74 ~]# <span class="nb">cp</span> /usr/local/orabbix/init.d/orabbix /etc/init.d/
+<span class="o">[</span>root@redhat74 ~]# <span class="nb">chmod</span> +x /etc/init.d/orabbix
+<span class="o">[</span>root@redhat74 ~]# <span class="nb">chmod</span> +x /usr/local/orabbix/run.sh
 <span class="o">[</span>root@redhat74 ~]# vi /etc/init.d/orabbix 
 ...
 <span class="nv">orabbix</span><span class="o">=</span>/usr/local/orabbix
@@ -242,6 +244,103 @@ test.NoDataFound=none
 报警效果图
 <img src="http://localhost:4000/assets/images/2018-07-02-Zabbix-orabbix-add-custom-key2.png" alt="效果图" /></p>
 
+<h2 id="zabbix-server和web端分离">Zabbix Server和Web端分离</h2>
+<p>最近有个需求，Zabbix Server放到生产网，方便监控所有的被管服务器。Web端放到OA网，方便管理员操作。
+环境：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">名称</th>
+      <th style="text-align: left">IP</th>
+      <th style="text-align: left">安装组件</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Zabbix Server</td>
+      <td style="text-align: left">192.168.226.200</td>
+      <td style="text-align: left">Zabbix Server、MySQL</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Web Server</td>
+      <td style="text-align: left">192.168.226.202</td>
+      <td style="text-align: left">Zabbix-web</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>MySQL用户授权
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">GRANT</span> <span class="k">ALL</span> <span class="k">PRIVILEGES</span> <span class="k">ON</span> <span class="n">zabbix</span><span class="p">.</span><span class="o">*</span> <span class="k">to</span> <span class="s1">'zabbix'</span><span class="o">@</span><span class="s1">'192.168.226.202'</span> <span class="n">identified</span> <span class="k">by</span> <span class="s1">'password'</span><span class="p">;</span>
+</code></pre></div>    </div>
+  </li>
+  <li>开通Web Server 到 Zabbix Server之间的防火墙</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">源</th>
+      <th style="text-align: left">目标</th>
+      <th style="text-align: left">端口</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Web Server</td>
+      <td style="text-align: left">Zabbix Server</td>
+      <td style="text-align: left">10051(tcp)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Web Server</td>
+      <td style="text-align: left">MySQL Server</td>
+      <td style="text-align: left">3306(tcp)</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>上传并安装zabbix-web：
+zabbix-web-3.0.18-1.el7.noarch.rpm<br />
+zabbix-web-mysql-3.0.18-1.el7.noarch.rpm
+因为zabbix-web需要PHP（php-mbstring）,所以我找了一个第三方的yum源</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@redhat74 ~]# more /etc/yum.repos.d/php.repo 
+[php]
+name=php
+baseurl=https://dl.iuscommunity.org/pub/ius/stable/Redhat/7/x86_64/
+enables=1
+gpgcheck=0
+</code></pre></div></div>
+
+<p>安装zabbix-web</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@redhat74 ~]# yum <span class="nb">install</span> <span class="nt">-y</span> php56u-ldap php56u-gd php56u-bcmath php56u-mysql php56u php56u-mbstring <span class="c">#安装PHP依赖包</span>
+<span class="o">[</span>root@redhat74 ~]# yum localinstall zabbix-web-mysql-3.0.18-1.el7.noarch.rpm zabbix-web-3.0.18-1.el7.noarch.rpm 
+<span class="o">[</span>root@redhat74 ~]# rpm <span class="nt">-qa</span>|grep php
+php56u-mbstring-5.6.36-1.ius.el7.x86_64
+php56u-bcmath-5.6.36-1.ius.el7.x86_64
+php56u-pear-1.10.5-1.ius.el7.noarch
+php56u-process-5.6.36-1.ius.el7.x86_64
+php56u-common-5.6.36-1.ius.el7.x86_64
+php56u-pdo-5.6.36-1.ius.el7.x86_64
+php56u-cli-5.6.36-1.ius.el7.x86_64
+php56u-pecl-jsonc-1.3.10-2.ius.el7.x86_64
+php56u-gd-5.6.36-1.ius.el7.x86_64
+php56u-mysqlnd-5.6.36-1.ius.el7.x86_64
+php56u-xml-5.6.36-1.ius.el7.x86_64
+php56u-5.6.36-1.ius.el7.x86_64
+php56u-ldap-5.6.36-1.ius.el7.x86_64
+<span class="o">[</span>root@redhat74 ~]# vi /etc/php.ini  <span class="c">#修改时区</span>
+date.timezone <span class="o">=</span> Asia/Shanghai
+<span class="o">[</span>root@redhat74 zabbix-3.0.19]# <span class="nb">cp</span> <span class="nt">-R</span> frontends/php /var/www/html/zabbix 
+<span class="o">[</span>root@redhat74 zabbix-3.0.19]# systemctl start httpd.service 
+<span class="o">[</span>root@redhat74 zabbix-3.0.19]# firewall-cmd <span class="nt">--add-service</span><span class="o">=</span>http  <span class="c">#开通http端口，运行用户访问</span>
+</code></pre></div></div>
+
+<p>配置Zabbix
+<img src="http://localhost:4000/assets/images/2018-07-02-Zabbix-web-install.png" alt="开始配置" /></p>
 
       </section>
 
