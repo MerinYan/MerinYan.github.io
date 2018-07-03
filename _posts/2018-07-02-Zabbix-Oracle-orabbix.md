@@ -115,7 +115,7 @@ orabbix-1.2.3/template/Orabbix_export_full.xml
 ![添加模板]({{site.url}}/assets/images/2018-07-02-Zabbix-orabbix-importtemplate1.png)
 
 ### 为Oracle主机关联模板
-![添加主机]({{site.url}}/assets/images/2018-07-02-Zabbix-Orabbix-addhost.png)  
+![添加主机]({{site.url}}/assets/images/2018-07-02-Zabbix-orabbix-addhost.png)  
 
 ![关联模板]({{site.url}}/assets/images/2018-07-02-Zabbix-orabbix-addtemplate.png)
 
