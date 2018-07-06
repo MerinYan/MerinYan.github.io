@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>Ansible Playbook 安装 zabbix agent | My Notes</title>
+<meta name="generator" content="Jekyll v3.8.1" />
+<meta property="og:title" content="Ansible Playbook 安装 zabbix agent" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="说明： 由于内网访问不了zabbix yum源，所以我直接将rpm包放在了zabbix server的http目录下面，直接安装http rpm" />
+<meta property="og:description" content="说明： 由于内网访问不了zabbix yum源，所以我直接将rpm包放在了zabbix server的http目录下面，直接安装http rpm" />
+<link rel="canonical" href="http://localhost:4000/2018/07/04/Ansible-Playbook-zabbix-agent.html" />
+<meta property="og:url" content="http://localhost:4000/2018/07/04/Ansible-Playbook-zabbix-agent.html" />
+<meta property="og:site_name" content="My Notes" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-07-04T17:27:40+08:00" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2018/07/04/Ansible-Playbook-zabbix-agent.html"},"url":"http://localhost:4000/2018/07/04/Ansible-Playbook-zabbix-agent.html","description":"说明： 由于内网访问不了zabbix yum源，所以我直接将rpm包放在了zabbix server的http目录下面，直接安装http rpm","headline":"Ansible Playbook 安装 zabbix agent","dateModified":"2018-07-04T17:27:40+08:00","datePublished":"2018-07-04T17:27:40+08:00","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <script src="/assets/js/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">My Notes</h1>
+        <p class="header">我的在线笔记</p>
+<ul>
+  
+    <li>
+      <a href="/2018/07/04/Ansible-Playbook-zabbix-agent.html">Ansible Playbook 安装 zabbix agent</a>
+    </li>
+  
+    <li>
+      <a href="/2018/07/02/Zabbix-Oracle-orabbix.html">Zabbix监控Oracle</a>
+    </li>
+  
+    <li>
+      <a href="/2018/06/19/Django_Echarts.html">Django Echarts</a>
+    </li>
+  
+    <li>
+      <a href="/2018/06/01/Ansible-comment.html">Ansible笔记</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/31/Mac-MySQL-Install.html">Mac Mysql 安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/25/Redhat-add-disk-to-lvm.html">Redhat 添加新硬盘到LVM</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/25/Redhat-Openshift-3.7-install.html">Redhat Openshift 3.7 安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/23/rabbitmq-Install.html">RabbitMQ安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/21/tencent-bk-install.html">腾讯蓝鲸安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/17/Ansible-Playbook-Install-Nginx.html">Ansible Playbook编译安装Nginx</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/16/Ansible-Tower-%E5%AE%89%E8%A3%85.html">Ansible Tower安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/16/Nginx-Make-Install.html">Nginx编译安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/15/pinpoint-install.html">Pinpoint (APM)安装</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/14/SQL-%E6%97%B6%E9%97%B4%E8%BD%AC%E6%8D%A2.html">SQL 时间转换</a>
+    </li>
+  
+    <li>
+      <a href="/2018/05/14/bk-cmdb-install.html">腾讯蓝鲸CMDB安装</a>
+    </li>
+  
+</ul>
+        <ul>
+          
+          <!-- <li><a class="buttons github" href="">View On GitHub</a></li> -->
+        </ul>
+
+        
+
+        
+      </header>
+
+      <section>
+        <p>说明：
+由于内网访问不了zabbix yum源，所以我直接将rpm包放在了zabbix server的http目录下面，直接安装http rpm</p>
+
+<h3 id="playbook-目录结构">playbook 目录结构</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@redhat74 ansible]# <span class="nb">pwd</span>
+/etc/ansible
+<span class="o">[</span>root@redhat74 ansible]# tree roles/zabbix-agent/
+roles/zabbix-agent/
+└── tasks
+    └── main.yml
+</code></pre></div></div>
+
+<h3 id="主yaml文件">主yaml文件</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="pi">[</span><span class="nv">root@redhat74 ansible</span><span class="pi">]</span><span class="c1"># more zabbix-agent.yml </span>
+<span class="pi">-</span> <span class="na">hosts</span><span class="pi">:</span> <span class="s">test</span>
+  <span class="na">remote_user</span><span class="pi">:</span> <span class="s">root</span>
+  <span class="na">roles</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">zabbix-agent</span>
+</code></pre></div></div>
+
+<h3 id="主task内容">主task内容</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="pi">[</span><span class="nv">root@redhat74 ansible</span><span class="pi">]</span><span class="c1"># more roles/zabbix-agent/tasks/main.yml </span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">install zabbix</span>
+  <span class="na">yum</span><span class="pi">:</span> <span class="s">name=http://192.168.226.200/zabbix-agent-3.0.19-1.el6.x86_64.rpm state=present</span>
+  <span class="na">become</span><span class="pi">:</span> <span class="no">true</span>
+
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">config zabbix_agentd.conf parameter Server</span>
+  <span class="na">lineinfile</span><span class="pi">:</span> <span class="s">path=/etc/zabbix/zabbix_agentd.conf state=present  regexp='^Server=' line='Server=192.168.226.200'</span>
+  <span class="na">become</span><span class="pi">:</span> <span class="no">true</span>
+
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">config zabbix_agentd.conf parameter ServerActive</span>
+  <span class="na">lineinfile</span><span class="pi">:</span> <span class="s">path=/etc/zabbix/zabbix_agentd.conf state=present  regexp='^ServerActive=' line='ServerActive=192.168.226.200'</span>
+  <span class="na">become</span><span class="pi">:</span> <span class="no">true</span>
+
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">restart zabbix agent</span>
+  <span class="na">service</span><span class="pi">:</span> <span class="s">name=zabbix-agent state=restarted enabled=yes</span>
+  <span class="na">become</span><span class="pi">:</span> <span class="no">true</span>
+
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">create zabbix hosts and link template</span>
+  <span class="na">local_action</span><span class="pi">:</span>
+    <span class="na">module</span><span class="pi">:</span> <span class="s">zabbix_host</span>
+    <span class="na">server_url</span><span class="pi">:</span> <span class="s">http://192.168.226.200/zabbix/</span>
+    <span class="na">login_user</span><span class="pi">:</span> <span class="s">Admin</span>
+    <span class="na">login_password</span><span class="pi">:</span> <span class="s">zabbix</span>
+    <span class="na">host_name</span><span class="pi">:</span> <span class="s1">'</span><span class="s">'</span>
+    <span class="na">visible_name</span><span class="pi">:</span> <span class="s1">'</span><span class="s">'</span>
+    <span class="na">host_groups</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s1">'</span><span class="s">Linux</span><span class="nv"> </span><span class="s">servers'</span>
+    <span class="na">link_templates</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">Template OS Linux</span>
+    <span class="na">status</span><span class="pi">:</span> <span class="s">enabled</span>
+    <span class="na">state</span><span class="pi">:</span> <span class="s">present</span>
+    <span class="na">interfaces</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">type</span><span class="pi">:</span> <span class="s">1</span>
+      <span class="na">main</span><span class="pi">:</span> <span class="s">1</span>
+      <span class="na">useip</span><span class="pi">:</span> <span class="s">1</span>
+      <span class="na">ip</span><span class="pi">:</span> <span class="s1">'</span><span class="s">'</span>
+      <span class="na">dns</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+      <span class="na">port</span><span class="pi">:</span> <span class="s">10050</span>
+  <span class="na">tags</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">set_hosts</span>
+</code></pre></div></div>
+
+<h3 id="执行效果">执行效果</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@redhat74 ansible]# ansible-playbook zabbix-agent.yml                                  
+
+PLAY [test] *************************************************************************************************
+
+TASK [Gathering Facts] **************************************************************************************
+ok: [192.168.226.201]
+
+TASK [zabbix-agent : install zabbix] ************************************************************************
+ok: [192.168.226.201]
+
+TASK [zabbix-agent : config zabbix_agentd.conf parameter Server] ********************************************
+ok: [192.168.226.201]
+
+TASK [zabbix-agent : config zabbix_agentd.conf parameter ServerActive] **************************************
+ok: [192.168.226.201]
+
+TASK [zabbix-agent : restart zabbix agent] ******************************************************************
+changed: [192.168.226.201]
+
+TASK [zabbix-agent : create zabbix hosts and link template] *************************************************
+changed: [192.168.226.201 -&gt; localhost]
+
+PLAY RECAP **************************************************************************************************
+192.168.226.201            : ok=6    changed=2    unreachable=0    failed=0   
+
+[root@redhat74 ansible]# 
+</code></pre></div></div>
+
+      </section>
+
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>

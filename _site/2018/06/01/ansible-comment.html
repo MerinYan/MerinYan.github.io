@@ -9,15 +9,15 @@
 <meta name="generator" content="Jekyll v3.8.1" />
 <meta property="og:title" content="Ansible笔记" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="被管机要求 Python 版本 2.4 或以上.如果版本低于 Python 2.5 ,还需要额外安装一个模块:python-simplejson 不支持Python3，可以通过命令安装Python2 ansible myhost –sudo -m raw -a “yum install -y python2 python-simplejson” 如果被管节点上开启了SElinux,你需要安装libselinux-python" />
-<meta property="og:description" content="被管机要求 Python 版本 2.4 或以上.如果版本低于 Python 2.5 ,还需要额外安装一个模块:python-simplejson 不支持Python3，可以通过命令安装Python2 ansible myhost –sudo -m raw -a “yum install -y python2 python-simplejson” 如果被管节点上开启了SElinux,你需要安装libselinux-python" />
-<link rel="canonical" href="http://localhost:4000/2018/06/01/ansible-comment.html" />
-<meta property="og:url" content="http://localhost:4000/2018/06/01/ansible-comment.html" />
+<meta name="description" content="Linux被管机要求 Python 版本 2.4 或以上.如果版本低于 Python 2.5 ,还需要额外安装一个模块:python-simplejson 不支持Python3，可以通过命令安装Python2 ansible myhost –sudo -m raw -a “yum install -y python2 python-simplejson” 如果被管节点上开启了SElinux,你需要安装libselinux-python" />
+<meta property="og:description" content="Linux被管机要求 Python 版本 2.4 或以上.如果版本低于 Python 2.5 ,还需要额外安装一个模块:python-simplejson 不支持Python3，可以通过命令安装Python2 ansible myhost –sudo -m raw -a “yum install -y python2 python-simplejson” 如果被管节点上开启了SElinux,你需要安装libselinux-python" />
+<link rel="canonical" href="http://localhost:4000/2018/06/01/Ansible-comment.html" />
+<meta property="og:url" content="http://localhost:4000/2018/06/01/Ansible-comment.html" />
 <meta property="og:site_name" content="My Notes" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2018-06-01T22:47:22+08:00" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2018/06/01/ansible-comment.html"},"url":"http://localhost:4000/2018/06/01/ansible-comment.html","description":"被管机要求 Python 版本 2.4 或以上.如果版本低于 Python 2.5 ,还需要额外安装一个模块:python-simplejson 不支持Python3，可以通过命令安装Python2 ansible myhost –sudo -m raw -a “yum install -y python2 python-simplejson” 如果被管节点上开启了SElinux,你需要安装libselinux-python","headline":"Ansible笔记","dateModified":"2018-06-01T22:47:22+08:00","datePublished":"2018-06-01T22:47:22+08:00","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2018/06/01/Ansible-comment.html"},"url":"http://localhost:4000/2018/06/01/Ansible-comment.html","description":"Linux被管机要求 Python 版本 2.4 或以上.如果版本低于 Python 2.5 ,还需要额外安装一个模块:python-simplejson 不支持Python3，可以通过命令安装Python2 ansible myhost –sudo -m raw -a “yum install -y python2 python-simplejson” 如果被管节点上开启了SElinux,你需要安装libselinux-python","headline":"Ansible笔记","dateModified":"2018-06-01T22:47:22+08:00","datePublished":"2018-06-01T22:47:22+08:00","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
     <link rel="stylesheet" href="/assets/css/style.css?v=">
@@ -35,6 +35,10 @@
 <ul>
   
     <li>
+      <a href="/2018/07/04/Ansible-Playbook-zabbix-agent.html">Ansible Playbook 安装 zabbix agent</a>
+    </li>
+  
+    <li>
       <a href="/2018/07/02/Zabbix-Oracle-orabbix.html">Zabbix监控Oracle</a>
     </li>
   
@@ -43,7 +47,7 @@
     </li>
   
     <li>
-      <a href="/2018/06/01/ansible-comment.html">Ansible笔记</a>
+      <a href="/2018/06/01/Ansible-comment.html">Ansible笔记</a>
     </li>
   
     <li>
@@ -104,7 +108,7 @@
       <section>
         <ul>
   <li>
-    <p><strong>被管机要求</strong>
+    <p><strong>Linux被管机要求</strong>
 Python 版本 2.4 或以上.如果版本低于 Python 2.5 ,还需要额外安装一个模块:python-simplejson
 不支持Python3，可以通过命令安装Python2
 ansible myhost –sudo -m raw -a “yum install -y python2 python-simplejson”
@@ -327,6 +331,58 @@ host_key_checking <span class="o">=</span> False
 <p>解决办法,允许Basic认证方式,允许未加密方式访问</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Set-Item -Path WSMan:\localhost\Service\Auth\Basic -Value $true
 winrm set winrm/config/service '@{AllowUnencrypted="true"}'
+</code></pre></div></div>
+
+<ul>
+  <li><strong>Ansible-playbook 注册参数</strong></li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@bkcmdb ansible]# ansible win <span class="nt">-m</span> win_service <span class="nt">-a</span> <span class="s2">"name=pla_mgmt"</span>   <span class="c"># 获取一个Windows服务状态                              </span>
+192.168.1.81 | SUCCESS <span class="o">=&gt;</span> <span class="o">{</span>
+    <span class="s2">"can_pause_and_continue"</span>: <span class="nb">false</span>, 
+    <span class="s2">"changed"</span>: <span class="nb">false</span>, 
+    <span class="s2">"depended_by"</span>: <span class="o">[]</span>, 
+    <span class="s2">"dependencies"</span>: <span class="o">[]</span>, 
+    <span class="s2">"description"</span>: <span class="s2">""</span>, 
+    <span class="s2">"desktop_interact"</span>: <span class="nb">false</span>, 
+    <span class="s2">"display_name"</span>: <span class="s2">"pla_mgmt"</span>, 
+    <span class="s2">"exists"</span>: <span class="nb">true</span>, 
+    <span class="s2">"name"</span>: <span class="s2">"pla_mgmt"</span>, 
+    <span class="s2">"path"</span>: <span class="s2">"C:</span><span class="se">\\</span><span class="s2">PLA</span><span class="se">\\</span><span class="s2">mgmt</span><span class="se">\\</span><span class="s2">nssm.exe"</span>, 
+    <span class="s2">"start_mode"</span>: <span class="s2">"auto"</span>, 
+    <span class="s2">"state"</span>: <span class="s2">"stopped"</span>, 
+    <span class="s2">"username"</span>: <span class="s2">"LocalSystem"</span>
+<span class="o">}</span>
+<span class="o">[</span>root@bkcmdb ansible]# more roles/pla_mgmt/tasks/main.yml       
+- name: get a service status
+  win_service: <span class="nv">name</span><span class="o">=</span>pla_mgmt
+  register: info    <span class="c"># 把查询结果保存到info中</span>
+
+- name: print service status
+  debug: <span class="nv">msg</span><span class="o">=</span>服务名称为：  <span class="c"># 调用info中的子变量 display_name，msg可以不用引号</span>
+
+- name: print status
+  debug: <span class="nv">msg</span><span class="o">=</span><span class="s2">"服务已经存在"</span>
+  when: info.exists    <span class="c"># 调用info中的子变量 exists，调用的时候不需要{}</span>
+<span class="o">[</span>root@bkcmdb ansible]# ansible-playbook pla_mgmt.yml 
+
+PLAY <span class="o">[</span>win] <span class="k">**********************************************************************</span>
+
+TASK <span class="o">[</span>pla_mgmt : get a service status] <span class="k">******************************************</span>
+ok: <span class="o">[</span>192.168.1.81]
+
+TASK <span class="o">[</span>pla_mgmt : print service status] <span class="k">******************************************</span>
+ok: <span class="o">[</span>192.168.1.81] <span class="o">=&gt;</span> <span class="o">{</span>
+    <span class="s2">"msg"</span>: <span class="s2">"服务名称为：pla_mgmt"</span>
+<span class="o">}</span>
+
+TASK <span class="o">[</span>pla_mgmt : print status] <span class="k">**************************************************</span>
+ok: <span class="o">[</span>192.168.1.81] <span class="o">=&gt;</span> <span class="o">{</span>
+    <span class="s2">"msg"</span>: <span class="s2">"服务已经存在"</span>
+<span class="o">}</span>
+
+PLAY RECAP <span class="k">**********************************************************************</span>
+192.168.1.81               : <span class="nv">ok</span><span class="o">=</span>3    <span class="nv">changed</span><span class="o">=</span>0    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0   
 </code></pre></div></div>
 
       </section>

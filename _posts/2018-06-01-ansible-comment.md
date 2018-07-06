@@ -6,17 +6,14 @@ date:   2018-06-01 22:47:22 +0800
 
 
 
-* **被管机要求**
+* **Linux被管机要求**
 Python 版本 2.4 或以上.如果版本低于 Python 2.5 ,还需要额外安装一个模块:python-simplejson
 不支持Python3，可以通过命令安装Python2
 ansible myhost --sudo -m raw -a "yum install -y python2 python-simplejson"
 如果被管节点上开启了SElinux,你需要安装libselinux-python
 
-
-
 * **查看ansible模块帮助**  
 ansible-doc <<模块名字>>
-
 
 * **敏感数据加密**  
 ```shell
@@ -224,4 +221,55 @@ host_key_checking = False
 ```
 Set-Item -Path WSMan:\localhost\Service\Auth\Basic -Value $true
 winrm set winrm/config/service '@{AllowUnencrypted="true"}'
+```
+
+* **Ansible-playbook 注册参数**  
+
+```bash
+[root@bkcmdb ansible]# ansible win -m win_service -a "name=pla_mgmt"   # 获取一个Windows服务状态                              
+192.168.1.81 | SUCCESS => {
+    "can_pause_and_continue": false, 
+    "changed": false, 
+    "depended_by": [], 
+    "dependencies": [], 
+    "description": "", 
+    "desktop_interact": false, 
+    "display_name": "pla_mgmt", 
+    "exists": true, 
+    "name": "pla_mgmt", 
+    "path": "C:\\PLA\\mgmt\\nssm.exe", 
+    "start_mode": "auto", 
+    "state": "stopped", 
+    "username": "LocalSystem"
+}
+[root@bkcmdb ansible]# more roles/pla_mgmt/tasks/main.yml       
+- name: get a service status
+  win_service: name=pla_mgmt
+  register: info    # 把查询结果保存到info中
+
+- name: print service status
+  debug: msg=服务名称为：{{ info.display_name}}  # 调用info中的子变量 display_name，msg可以不用引号
+
+- name: print status
+  debug: msg="服务已经存在"
+  when: info.exists    # 调用info中的子变量 exists，调用的时候不需要{}
+[root@bkcmdb ansible]# ansible-playbook pla_mgmt.yml 
+
+PLAY [win] **********************************************************************
+
+TASK [pla_mgmt : get a service status] ******************************************
+ok: [192.168.1.81]
+
+TASK [pla_mgmt : print service status] ******************************************
+ok: [192.168.1.81] => {
+    "msg": "服务名称为：pla_mgmt"
+}
+
+TASK [pla_mgmt : print status] **************************************************
+ok: [192.168.1.81] => {
+    "msg": "服务已经存在"
+}
+
+PLAY RECAP **********************************************************************
+192.168.1.81               : ok=3    changed=0    unreachable=0    failed=0   
 ```
