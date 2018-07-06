@@ -9,15 +9,15 @@
 <meta name="generator" content="Jekyll v3.8.1" />
 <meta property="og:title" content="Ansible笔记" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Linux被管机要求 Python 版本 2.4 或以上.如果版本低于 Python 2.5 ,还需要额外安装一个模块:python-simplejson 不支持Python3，可以通过命令安装Python2 ansible myhost –sudo -m raw -a “yum install -y python2 python-simplejson” 如果被管节点上开启了SElinux,你需要安装libselinux-python" />
-<meta property="og:description" content="Linux被管机要求 Python 版本 2.4 或以上.如果版本低于 Python 2.5 ,还需要额外安装一个模块:python-simplejson 不支持Python3，可以通过命令安装Python2 ansible myhost –sudo -m raw -a “yum install -y python2 python-simplejson” 如果被管节点上开启了SElinux,你需要安装libselinux-python" />
+<meta name="description" content="Linux被管机要求" />
+<meta property="og:description" content="Linux被管机要求" />
 <link rel="canonical" href="http://localhost:4000/2018/06/01/Ansible-comment.html" />
 <meta property="og:url" content="http://localhost:4000/2018/06/01/Ansible-comment.html" />
 <meta property="og:site_name" content="My Notes" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2018-06-01T22:47:22+08:00" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2018/06/01/Ansible-comment.html"},"url":"http://localhost:4000/2018/06/01/Ansible-comment.html","description":"Linux被管机要求 Python 版本 2.4 或以上.如果版本低于 Python 2.5 ,还需要额外安装一个模块:python-simplejson 不支持Python3，可以通过命令安装Python2 ansible myhost –sudo -m raw -a “yum install -y python2 python-simplejson” 如果被管节点上开启了SElinux,你需要安装libselinux-python","headline":"Ansible笔记","dateModified":"2018-06-01T22:47:22+08:00","datePublished":"2018-06-01T22:47:22+08:00","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2018/06/01/Ansible-comment.html"},"url":"http://localhost:4000/2018/06/01/Ansible-comment.html","description":"Linux被管机要求","headline":"Ansible笔记","dateModified":"2018-06-01T22:47:22+08:00","datePublished":"2018-06-01T22:47:22+08:00","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
     <link rel="stylesheet" href="/assets/css/style.css?v=">
@@ -107,19 +107,25 @@
 
       <section>
         <ul>
-  <li>
-    <p><strong>Linux被管机要求</strong>
-Python 版本 2.4 或以上.如果版本低于 Python 2.5 ,还需要额外安装一个模块:python-simplejson
+  <li><strong>Linux被管机要求</strong></li>
+</ul>
+
+<p>Python 版本 2.4 或以上.如果版本低于 Python 2.5 ,还需要额外安装一个模块:python-simplejson
 不支持Python3，可以通过命令安装Python2
 ansible myhost –sudo -m raw -a “yum install -y python2 python-simplejson”
 如果被管节点上开启了SElinux,你需要安装libselinux-python</p>
-  </li>
-  <li>
-    <p><strong>查看ansible模块帮助</strong><br />
-ansible-doc «模块名字»</p>
-  </li>
-  <li><strong>敏感数据加密</strong>
-    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@haproxy demo]# <span class="nb">cat </span>default/main.yaml <span class="c">#源文件内容</span>
+
+<ul>
+  <li><strong>查看ansible模块帮助</strong></li>
+</ul>
+
+<p>ansible-doc «模块名字»</p>
+
+<ul>
+  <li><strong>敏感数据加密</strong></li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@haproxy demo]# <span class="nb">cat </span>default/main.yaml <span class="c">#源文件内容</span>
 password: 123456
 <span class="o">[</span>root@haproxy demo]# <span class="nb">cat </span>secret.txt <span class="c">#加密解密的密码</span>
 redhat
@@ -138,90 +144,166 @@ Encryption successful
 Vault password: 
 password: 123456
 <span class="o">[</span>root@haproxy demo]# ansible-vault edit default/main.yaml <span class="c">#编辑加密的文件</span>
-</code></pre></div>    </div>
-  </li>
-  <li><strong>在playbook中使用加密文件</strong>
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  [root@haproxy demo]# ansible-playbook hello-word.yaml --vault-password-file secret.txt
+</code></pre></div></div>
 
-  PLAY [say 'hello word'] *********************************************************
+<ul>
+  <li><strong>在playbook中使用加密文件</strong></li>
+</ul>
 
-  TASK [Gathering Facts] **********************************************************
-  ok: [192.168.1.107]
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@haproxy demo]# ansible-playbook hello-word.yaml <span class="nt">--vault-password-file</span> secret.txt
 
-  TASK [echo 'hello world'] *******************************************************
-  changed: [192.168.1.107]
+PLAY <span class="o">[</span>say <span class="s1">'hello word'</span><span class="o">]</span> <span class="k">*********************************************************</span>
 
-  TASK [print sdtout] *************************************************************
-  ok: [192.168.1.107] =&gt; {
-      "msg": 123456
-  }
+TASK <span class="o">[</span>Gathering Facts] <span class="k">**********************************************************</span>
+ok: <span class="o">[</span>192.168.1.107]
 
-  PLAY RECAP **********************************************************************
-  192.168.1.107              : ok=3    changed=1    unreachable=0    failed=0   
-</code></pre></div>    </div>
+TASK <span class="o">[</span><span class="nb">echo</span> <span class="s1">'hello world'</span><span class="o">]</span> <span class="k">*******************************************************</span>
+changed: <span class="o">[</span>192.168.1.107]
+
+TASK <span class="o">[</span>print sdtout] <span class="k">*************************************************************</span>
+ok: <span class="o">[</span>192.168.1.107] <span class="o">=&gt;</span> <span class="o">{</span>
+    <span class="s2">"msg"</span>: 123456
+<span class="o">}</span>
+
+PLAY RECAP <span class="k">**********************************************************************</span>
+192.168.1.107              : <span class="nv">ok</span><span class="o">=</span>3    <span class="nv">changed</span><span class="o">=</span>1    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0   
+</code></pre></div></div>
+
+<ul>
+  <li><strong>动态主机清单</strong></li>
+</ul>
+
+<p>动态主机清单实际就是一个脚本，这个脚本必须支持2个参数(–list 和 –host)，返回内容为json格式的host信息，执行ansible命令或playbook时必须加-i参数指定这个脚本的位置</p>
+
+<ul>
+  <li>
+    <p><strong>常用模块</strong></p>
   </li>
   <li>
-    <p><strong>动态主机清单</strong><br />
-动态主机清单实际就是一个脚本，这个脚本必须支持2个参数(–list 和 –host)，返回内容为json格式的host信息，执行ansible命令或playbook时必须加-i参数指定这个脚本的位置</p>
-  </li>
-  <li><strong>常用模块</strong></li>
-  <li>yum<br />
-[root@tower ~]# ansible web -m yum -a “name=httpd state=present”</li>
-  <li>user<br />
-[root@tower ~]# ansible web -m user -a “name=user1 group=root”</li>
-  <li>
-    <p>git<br />
-[root@tower ~]# ansible web -m git -a “repo=https://github.com/cakephp/cakephp.git version=3.6.0 dest=~/test/”</p>
-  </li>
-  <li><strong>本地执行module</strong>
-一个自定义的module，调用系统nc命令检查端口是否被占用，但被管机未安装nc命令，那么可以通过在本地执行这个module。有两种方式可以实现：
-    <ol>
-      <li>通过代理的方式（推荐）</li>
-    </ol>
-  </li>
-  <li>name: smoke test
-can_reach: host= port=
-delegate_to: localhost
-    <ol>
-      <li>通过local_action模块实现</li>
-    </ol>
-  </li>
-  <li>
-    <p>name: smoke test
-local_action: can_reach host= port=</p>
-  </li>
-  <li><strong>Windows被管机</strong>
-    <ol>
-      <li>管理节点（必须是Linux）安装pywinrm模块
-pip install http://github.com/diyan/pywinrm/archive/master.zip#egg=pywinrm</li>
-      <li>Windows被管节点必须是PowerShell 3.0以上（Windows 7 SP1 ,Windows Server 2008 SP1以上）
-在Powershell中执行https://github.com/cchurch/ansible/blob/devel/examples/scripts/upgrade_to_ps3.ps1</li>
-      <li>Windows被管节点需要打开winrm服务
-在Powershell中执行https://github.com/ansible/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1</li>
-    </ol>
+    <p>yum</p>
   </li>
 </ul>
 
-<p>winrm远程连接测试
-winrs -r:http://192.168.1.81:5985/wsman -u:administrator -p:’1qaz@WSX’ ipconfig</p>
+<p>[root@tower ~]# ansible web -m yum -a “name=httpd state=present”</p>
 
-<p>hosts文件样例</p>
-<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[root@bkcmdb ~]</span><span class="c"># cat /etc/ansible/hosts 
-</span><span class="nn">[win]</span>
-<span class="err">192.168.1.81</span> <span class="py">ansible_ssh_host</span><span class="p">=</span><span class="s">192.168.1.81 ansible_ssh_port=5985 ansible_ssh_user='administrator' ansible_ssh_pass='1qaz@WSX' ansible_connection=w</span>
-<span class="err">inrm</span> <span class="py">ansible_winrm_server_cert_validation</span><span class="p">=</span><span class="s">ignore</span>
-<span class="nn">[root@bkcmdb ~]</span><span class="c"># ansible all -m win_ping
-</span><span class="err">192.168.1.81</span> <span class="err">|</span> <span class="py">SUCCESS</span> <span class="p">=</span><span class="s">&gt; {</span>
-    <span class="err">"changed":</span> <span class="err">false,</span> 
-    <span class="err">"ping":</span> <span class="err">"pong"</span>
+<ul>
+  <li>user</li>
+</ul>
+
+<p>[root@tower ~]# ansible web -m user -a “name=user1 group=root”</p>
+
+<ul>
+  <li>git</li>
+</ul>
+
+<p>[root@tower ~]# ansible web -m git -a “repo=https://github.com/cakephp/cakephp.git version=3.6.0 dest=~/test/”</p>
+
+<ul>
+  <li><strong>本地执行module</strong></li>
+</ul>
+
+<p>一个自定义的module，调用系统nc命令检查端口是否被占用，但被管机未安装nc命令，那么可以通过在本地执行这个module。有两种方式可以实现：</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">1. 通过代理的方式（推荐）</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">smoke test</span>
+  <span class="na">can_reach</span><span class="pi">:</span> <span class="s">host= port=</span>
+  <span class="na">delegate_to</span><span class="pi">:</span> <span class="s">localhost</span>
+<span class="s">2. 通过local_action模块实现</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">smoke test</span>
+  <span class="na">local_action</span><span class="pi">:</span> <span class="s">can_reach host= port=</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>Windows被管机</strong></li>
+</ul>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">1. 管理节点（必须是Linux），且需要安装pywinrm模块，执行</span><span class="pi">:</span>
+<span class="c1"># pip install http://github.com/diyan/pywinrm/archive/master.zip#egg=pywinrm</span>
+<span class="s">2. Windows被管节点必须是PowerShell 3.0以上（Windows 7 SP1 ,Windows Server 2008 SP1以上）,在Powershell中执行</span><span class="pi">:</span>
+<span class="c1"># https://github.com/cchurch/ansible/blob/devel/examples/scripts/upgrade_to_ps3.ps1</span>
+<span class="s">3. Windows被管节点需要打开winrm服务，在Powershell中执行</span><span class="pi">:</span>
+<span class="c1"># https://github.com/ansible/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>winrm远程连接测试</strong></li>
+</ul>
+
+<pre><code class="language-cmd">winrs -r:http://192.168.1.81:5985/wsman -u:administrator -p:'password' ipconfig
+</code></pre>
+
+<ul>
+  <li><strong>Windows hosts文件样例</strong></li>
+</ul>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="pi">[</span><span class="nv">root@bkcmdb ~</span><span class="pi">]</span><span class="c1"># cat /etc/ansible/hosts</span>
+<span class="pi">[</span><span class="nv">win</span><span class="pi">]</span>
+<span class="s">192.168.1.81 ansible_ssh_host=192.168.1.81 ansible_ssh_port=5985 ansible_ssh_user='administrator' ansible_ssh_pass='1qaz@WSX' ansible_connection=w</span>
+<span class="s">inrm ansible_winrm_server_cert_validation=ignore</span>
+<span class="pi">[</span><span class="nv">root@bkcmdb ~</span><span class="pi">]</span><span class="c1"># ansible all -m win_ping</span>
+<span class="s">192.168.1.81 | SUCCESS =&gt; {</span>
+    <span class="s">"changed"</span><span class="pi">:</span> <span class="no">false</span><span class="s">,</span>
+    <span class="s">"ping"</span><span class="pi">:</span> <span class="s2">"</span><span class="s">pong"</span>
 <span class="err">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>Ansible-playbook 注册参数</strong></li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@bkcmdb ansible]# ansible win <span class="nt">-m</span> win_service <span class="nt">-a</span> <span class="s2">"name=pla_mgmt"</span>   <span class="c"># 获取一个Windows服务状态</span>
+192.168.1.81 | SUCCESS <span class="o">=&gt;</span> <span class="o">{</span>
+    <span class="s2">"can_pause_and_continue"</span>: <span class="nb">false</span>, 
+    <span class="s2">"changed"</span>: <span class="nb">false</span>, 
+    <span class="s2">"depended_by"</span>: <span class="o">[]</span>, 
+    <span class="s2">"dependencies"</span>: <span class="o">[]</span>, 
+    <span class="s2">"description"</span>: <span class="s2">""</span>, 
+    <span class="s2">"desktop_interact"</span>: <span class="nb">false</span>, 
+    <span class="s2">"display_name"</span>: <span class="s2">"pla_mgmt"</span>, 
+    <span class="s2">"exists"</span>: <span class="nb">true</span>, 
+    <span class="s2">"name"</span>: <span class="s2">"pla_mgmt"</span>, 
+    <span class="s2">"path"</span>: <span class="s2">"C:</span><span class="se">\\</span><span class="s2">PLA</span><span class="se">\\</span><span class="s2">mgmt</span><span class="se">\\</span><span class="s2">nssm.exe"</span>, 
+    <span class="s2">"start_mode"</span>: <span class="s2">"auto"</span>, 
+    <span class="s2">"state"</span>: <span class="s2">"stopped"</span>, 
+    <span class="s2">"username"</span>: <span class="s2">"LocalSystem"</span>
+<span class="o">}</span>
+<span class="o">[</span>root@bkcmdb ansible]# more roles/pla_mgmt/tasks/main.yml
+- name: get a service status
+  win_service: <span class="nv">name</span><span class="o">=</span>pla_mgmt
+  register: info    <span class="c"># 把查询结果保存到info中</span>
+
+- name: print service status
+  debug: <span class="nv">msg</span><span class="o">=</span>服务名称为：  <span class="c"># 调用info中的子变量 display_name，msg可以不用引号</span>
+
+- name: print status
+  debug: <span class="nv">msg</span><span class="o">=</span><span class="s2">"服务已经存在"</span>
+  when: info.exists    <span class="c"># 调用info中的子变量 exists，调用的时候不需要{}</span>
+<span class="o">[</span>root@bkcmdb ansible]# ansible-playbook pla_mgmt.yml 
+
+PLAY <span class="o">[</span>win] <span class="k">**********************************************************************</span>
+
+TASK <span class="o">[</span>pla_mgmt : get a service status] <span class="k">******************************************</span>
+ok: <span class="o">[</span>192.168.1.81]
+
+TASK <span class="o">[</span>pla_mgmt : print service status] <span class="k">******************************************</span>
+ok: <span class="o">[</span>192.168.1.81] <span class="o">=&gt;</span> <span class="o">{</span>
+    <span class="s2">"msg"</span>: <span class="s2">"服务名称为：pla_mgmt"</span>
+<span class="o">}</span>
+
+TASK <span class="o">[</span>pla_mgmt : print status] <span class="k">**************************************************</span>
+ok: <span class="o">[</span>192.168.1.81] <span class="o">=&gt;</span> <span class="o">{</span>
+    <span class="s2">"msg"</span>: <span class="s2">"服务已经存在"</span>
+<span class="o">}</span>
+
+PLAY RECAP <span class="k">**********************************************************************</span>
+192.168.1.81               : <span class="nv">ok</span><span class="o">=</span>3    <span class="nv">changed</span><span class="o">=</span>0    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0   
 </code></pre></div></div>
 
 <ul>
   <li><strong>连接VCenter 通过template创建虚拟机</strong></li>
 </ul>
 
-<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># more create_vm.yaml </span>
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># more create_vm.yaml</span>
 <span class="nn">---</span>
 <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">demo</span>
   <span class="na">hosts</span><span class="pi">:</span> <span class="s">all</span>
@@ -280,6 +362,7 @@ winrs -r:http://192.168.1.81:5985/wsman -u:administrator -p:’1qaz@WSX’ ipcon
         <span class="na">state</span><span class="pi">:</span> <span class="s">absent</span>
       <span class="na">delegate_to</span><span class="pi">:</span> <span class="s">localhost</span>
 </code></pre></div></div>
+
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MBookPro:ansible mervin<span class="nv">$ </span>ansible-playbook <span class="nt">-i</span> hosts create_vm.yaml 
 
 PLAY <span class="o">[</span>demo] <span class="k">****************************************************************************</span>
@@ -302,88 +385,44 @@ PLAY RECAP <span class="k">*****************************************************
 </code></pre></div></div>
 
 <ul>
-  <li><strong>常见问题1</strong>
-    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@tower ~]# ansible all <span class="nt">-m</span> ping
-<span class="o">[</span>WARNING]: Found both group and host with same name: localhost
-localhost | FAILED! <span class="o">=&gt;</span> <span class="o">{</span>
-  <span class="s2">"msg"</span>: <span class="s2">"Using a SSH password instead of a key is not possible because Host Key 
-  checking is enabled and sshpass does not support this.  Please add this host's 
-  fingerprint to your known_hosts file to manage this host."</span>
-<span class="o">}</span>
-</code></pre></div>    </div>
-    <p>解决办法：禁用host_key 检查</p>
-    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@tower ~]# vi /etc/ansible/ansible.cfg 
-host_key_checking <span class="o">=</span> False
-</code></pre></div>    </div>
-  </li>
-  <li><strong>常见故障2</strong>
-管理Windows报错 the specified credentials were rejected by the server
-    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@bkcmdb ~]# ansible all <span class="nt">-m</span> win_ping
-192.168.1.81 | UNREACHABLE! <span class="o">=&gt;</span> <span class="o">{</span>
-  <span class="s2">"changed"</span>: <span class="nb">false</span>, 
-  <span class="s2">"msg"</span>: <span class="s2">"plaintext: the specified credentials were rejected by the server"</span>, 
-  <span class="s2">"unreachable"</span>: <span class="nb">true</span>
-<span class="o">}</span>
-</code></pre></div>    </div>
-  </li>
+  <li><strong>常见问题1</strong></li>
 </ul>
 
-<p>解决办法,允许Basic认证方式,允许未加密方式访问</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Set-Item -Path WSMan:\localhost\Service\Auth\Basic -Value $true
-winrm set winrm/config/service '@{AllowUnencrypted="true"}'
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@tower ~]# ansible all <span class="nt">-m</span> ping
+<span class="o">[</span>WARNING]: Found both group and host with same name: localhost
+localhost | FAILED! <span class="o">=&gt;</span> <span class="o">{</span>
+    <span class="s2">"msg"</span>: <span class="s2">"Using a SSH password instead of a key is not possible because Host Key 
+    checking is enabled and sshpass does not support this.  Please add this host's 
+    fingerprint to your known_hosts file to manage this host."</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>解决办法：禁用host_key 检查</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@tower ~]# vi /etc/ansible/ansible.cfg 
+host_key_checking <span class="o">=</span> False
 </code></pre></div></div>
 
 <ul>
-  <li><strong>Ansible-playbook 注册参数</strong></li>
+  <li><strong>常见故障2</strong></li>
 </ul>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@bkcmdb ansible]# ansible win <span class="nt">-m</span> win_service <span class="nt">-a</span> <span class="s2">"name=pla_mgmt"</span>   <span class="c"># 获取一个Windows服务状态                              </span>
-192.168.1.81 | SUCCESS <span class="o">=&gt;</span> <span class="o">{</span>
-    <span class="s2">"can_pause_and_continue"</span>: <span class="nb">false</span>, 
+<p>管理Windows报错 the specified credentials were rejected by the server</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@bkcmdb ~]# ansible all <span class="nt">-m</span> win_ping
+192.168.1.81 | UNREACHABLE! <span class="o">=&gt;</span> <span class="o">{</span>
     <span class="s2">"changed"</span>: <span class="nb">false</span>, 
-    <span class="s2">"depended_by"</span>: <span class="o">[]</span>, 
-    <span class="s2">"dependencies"</span>: <span class="o">[]</span>, 
-    <span class="s2">"description"</span>: <span class="s2">""</span>, 
-    <span class="s2">"desktop_interact"</span>: <span class="nb">false</span>, 
-    <span class="s2">"display_name"</span>: <span class="s2">"pla_mgmt"</span>, 
-    <span class="s2">"exists"</span>: <span class="nb">true</span>, 
-    <span class="s2">"name"</span>: <span class="s2">"pla_mgmt"</span>, 
-    <span class="s2">"path"</span>: <span class="s2">"C:</span><span class="se">\\</span><span class="s2">PLA</span><span class="se">\\</span><span class="s2">mgmt</span><span class="se">\\</span><span class="s2">nssm.exe"</span>, 
-    <span class="s2">"start_mode"</span>: <span class="s2">"auto"</span>, 
-    <span class="s2">"state"</span>: <span class="s2">"stopped"</span>, 
-    <span class="s2">"username"</span>: <span class="s2">"LocalSystem"</span>
+    <span class="s2">"msg"</span>: <span class="s2">"plaintext: the specified credentials were rejected by the server"</span>, 
+    <span class="s2">"unreachable"</span>: <span class="nb">true</span>
 <span class="o">}</span>
-<span class="o">[</span>root@bkcmdb ansible]# more roles/pla_mgmt/tasks/main.yml       
-- name: get a service status
-  win_service: <span class="nv">name</span><span class="o">=</span>pla_mgmt
-  register: info    <span class="c"># 把查询结果保存到info中</span>
-
-- name: print service status
-  debug: <span class="nv">msg</span><span class="o">=</span>服务名称为：  <span class="c"># 调用info中的子变量 display_name，msg可以不用引号</span>
-
-- name: print status
-  debug: <span class="nv">msg</span><span class="o">=</span><span class="s2">"服务已经存在"</span>
-  when: info.exists    <span class="c"># 调用info中的子变量 exists，调用的时候不需要{}</span>
-<span class="o">[</span>root@bkcmdb ansible]# ansible-playbook pla_mgmt.yml 
-
-PLAY <span class="o">[</span>win] <span class="k">**********************************************************************</span>
-
-TASK <span class="o">[</span>pla_mgmt : get a service status] <span class="k">******************************************</span>
-ok: <span class="o">[</span>192.168.1.81]
-
-TASK <span class="o">[</span>pla_mgmt : print service status] <span class="k">******************************************</span>
-ok: <span class="o">[</span>192.168.1.81] <span class="o">=&gt;</span> <span class="o">{</span>
-    <span class="s2">"msg"</span>: <span class="s2">"服务名称为：pla_mgmt"</span>
-<span class="o">}</span>
-
-TASK <span class="o">[</span>pla_mgmt : print status] <span class="k">**************************************************</span>
-ok: <span class="o">[</span>192.168.1.81] <span class="o">=&gt;</span> <span class="o">{</span>
-    <span class="s2">"msg"</span>: <span class="s2">"服务已经存在"</span>
-<span class="o">}</span>
-
-PLAY RECAP <span class="k">**********************************************************************</span>
-192.168.1.81               : <span class="nv">ok</span><span class="o">=</span>3    <span class="nv">changed</span><span class="o">=</span>0    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0   
 </code></pre></div></div>
+
+<p>解决办法,允许Basic认证方式,允许未加密方式访问</p>
+
+<pre><code class="language-cmd">Set-Item -Path WSMan:\localhost\Service\Auth\Basic -Value $true
+winrm set winrm/config/service '@{AllowUnencrypted="true"}'
+</code></pre>
+
 
       </section>
 
