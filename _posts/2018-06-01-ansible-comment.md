@@ -129,18 +129,18 @@ inrm ansible_winrm_server_cert_validation=ignore
 ```bash
 [root@bkcmdb ansible]# ansible win -m win_service -a "name=pla_mgmt"   # 获取一个Windows服务状态
 192.168.1.81 | SUCCESS => {
-    "can_pause_and_continue": false, 
-    "changed": false, 
-    "depended_by": [], 
-    "dependencies": [], 
-    "description": "", 
-    "desktop_interact": false, 
-    "display_name": "pla_mgmt", 
-    "exists": true, 
-    "name": "pla_mgmt", 
-    "path": "C:\\PLA\\mgmt\\nssm.exe", 
-    "start_mode": "auto", 
-    "state": "stopped", 
+    "can_pause_and_continue": false,
+    "changed": false,
+    "depended_by": [],
+    "dependencies": [],
+    "description": "",
+    "desktop_interact": false,
+    "display_name": "pla_mgmt",
+    "exists": true,
+    "name": "pla_mgmt",
+    "path": "C:\\PLA\\mgmt\\nssm.exe",
+    "start_mode": "auto",
+    "state": "stopped",
     "username": "LocalSystem"
 }
 [root@bkcmdb ansible]# more roles/pla_mgmt/tasks/main.yml
@@ -174,6 +174,48 @@ ok: [192.168.1.81] => {
 PLAY RECAP **********************************************************************
 192.168.1.81               : ok=3    changed=0    unreachable=0    failed=0   
 ```
+
+* **判断文件是否存在**
+
+可以使用stat(win_stat)模块
+
+```json
+[root@bkcmdb ~]# ansible localhost -m stat -a path=/opt
+192.168.1.90 | SUCCESS => {
+    "changed": false,
+    "stat": {
+        "atime": 1529636135.8435578,
+        "attr_flags": "",
+        "attributes": [],
+        "block_size": 4096,
+        "blocks": 8,
+        "charset": "binary",
+        "ctime": 1529636135.1105578,
+        "dev": 64768,
+        "device_type": 0,
+        "executable": true,
+        "exists": true,
+        "... ..."
+        "xusr": true
+    }
+}
+```
+
+```yml
+[root@bkcmdb ansible]# more roles/test/tasks/main.yml
+- name: check file exists
+  stat: path=/opt
+  register: opt_exists
+
+- name: file exists
+  when: opt_exists.stat.exists
+  debug: msg="file already here {{ opt_exists.stat.path }}"
+
+- name: file not exists
+  when: not opt_exists.stat.exists
+  debug: msg="file not exists {{ opt_exists.stat.path }}"
+```
+
 
 * **连接VCenter 通过template创建虚拟机**  
 
@@ -286,8 +328,8 @@ host_key_checking = False
 ```shell
 [root@bkcmdb ~]# ansible all -m win_ping
 192.168.1.81 | UNREACHABLE! => {
-    "changed": false, 
-    "msg": "plaintext: the specified credentials were rejected by the server", 
+    "changed": false,
+    "msg": "plaintext: the specified credentials were rejected by the server",
     "unreachable": true
 }
 ```
@@ -299,3 +341,21 @@ Set-Item -Path WSMan:\localhost\Service\Auth\Basic -Value $true
 winrm set winrm/config/service '@{AllowUnencrypted="true"}'
 ```
 
+* **常见故障3**
+
+管理Windows报错：
+```ansible
+192.168.1.81 | UNREACHABLE! => {
+    "changed": false, 
+    "msg": "plaintext: the specified credentials were rejected by the server", 
+    "unreachable": true
+}
+```
+
+解决办法：
+```powershell
+Set-Item -Path WSMan:\localhost\Service\Auth\Basic -Value $true
+winrm set winrm/config/service '@{AllowUnencrypted="true"}'
+或者确保Basic认证，然后ansible使用SSL方式连接（5986）
+Set-Item -Path WSMan:\localhost\Service\Auth\Basic -Value $true
+```
